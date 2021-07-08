@@ -1,5 +1,5 @@
 # Internal Tool Setup
-This repository will host our internal open source tool setup which will contain productivity tools for text- and video chat, file storage with editing tools and collaboration features and more tools for internal use-cases.  
+This repository will host our internal open source tool setup which will contain productivity tools for text- and video chat, file storage with editing and collaboration features and more tools for internal use-cases.  
 It is also used for planning and evaluating possible tools.  
 
 **This is work in progress. Do not use it in live systems!**  
@@ -11,7 +11,7 @@ As soon as this repository contains a complete setup which is ready to be used, 
 #### Requirements
 - private chat
 - group chat
-- channels (and subchannels?)
+- channels (and sub-channels?)
 - send files via chat
 - some kind of project context would be nice
 - mobile app (?)
@@ -26,8 +26,9 @@ As soon as this repository contains a complete setup which is ready to be used, 
 - [Matrix](https://matrix.org/) is a decentralized and e2e-encrypted communication platform
 - [Synapse](https://github.com/matrix-org/synapse) is the reference Matrix homeserver
 - [Element](https://github.com/vector-im/element-web) (formerly Riot and Vector) provides Web, iOS and Android Apps (-> user-friendly on mobile) for Matrix
-- easy to set up (see https://matrix.org/blog/2020/04/06/running-your-own-secure-communication-service-with-matrix-and-jitsi/)
+- [easy to set up](https://matrix.org/blog/2020/04/06/running-your-own-secure-communication-service-with-matrix-and-jitsi/) and [well documented](https://github.com/matrix-org/synapse/blob/develop/INSTALL.md)
 - **implements given jitsi server into chat window for voice and video chat**
+- TURN server necessary for jitsi to connect between clients behind NAT (seems to be difficult to set up)
 - project context possible via "Spaces" with channels per "Space"
 - modern and fast UI with common features
 - Slack, Microsoft Teams and Gitter bridges (see https://element.io/blog/microsoft-teams-and-slack-integration-using-matrix/)
@@ -52,7 +53,7 @@ As soon as this repository contains a complete setup which is ready to be used, 
 - sharing documents with people from extern (restrict to read access?) (see [Access Control](#access-control--user-management))
 - edit files from file storage in browser
 - edit documents, spreadsheets and presentations (Microsoft Office and open formats)
-- show pdf files (possible editation via annotations?)
+- show pdf files (possible editing via annotations?)
 - edit markdown files with preview (?)
 - collaborative editing for all editable formats (if possible)
 #### Possible open source tools
@@ -68,7 +69,7 @@ As soon as this repository contains a complete setup which is ready to be used, 
     - differentiation between (private files,) shared files and public files
     - sharing documents with people from extern (restrict to read access?)
 #### Possible open source tools
-- LDAP
+- LDAP (protocol)
 
 ### Tasks ("Kanban") (?)
 ### Polls / Time coordination ("Doodle") (?)
