@@ -69,7 +69,8 @@ As soon as this repository contains a complete setup which is ready to be used, 
     - differentiation between (private files,) shared files and public files
     - sharing documents with people from extern (restrict to read access?)
 #### Possible open source tools
-- LDAP (protocol)
+- Protocols: LDAP, OAuth2 / OpenID Connect
+- Keycloak
 
 ### Tasks ("Kanban") (?)
 ### Polls / Time coordination ("Doodle") (?)
