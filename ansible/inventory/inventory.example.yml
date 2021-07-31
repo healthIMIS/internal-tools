@@ -1,0 +1,5 @@
+---
+all:
+  dedicated:
+    hosts:
+      example.org
