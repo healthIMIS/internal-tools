@@ -33,6 +33,7 @@
     name: gpg
 
 - name: Add the Proxmox VE repository key
+  become: true
   get_url:
     url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
     dest: /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
