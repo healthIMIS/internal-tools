@@ -11,8 +11,6 @@
     upgrade: yes
     update_cache: yes
 
-# todo hostname?
-
 # see https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye
 - name: Template /etc/hosts file
   become: true
@@ -27,7 +25,7 @@
 - name: Fail if hostname does not resolve correctly
   fail:
     msg: "Own hostname could not be resolved correctly"
-  when: resolved_ip == {{ ansible_facts.eth0.ipv4.address }}
+  when: resolved_ip == {{ proxmox.public_ip }}
 
 - name: Add the Proxmox VE repository key
   become: true

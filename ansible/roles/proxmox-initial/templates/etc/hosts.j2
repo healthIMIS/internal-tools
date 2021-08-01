@@ -7,4 +7,4 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
 # Hosts
-{{ inventory_hostname }} {{ ansible_facts.eth0.ipv4.address }} {{ inventory_hostname_short }}
+{{ inventory_hostname }} {{ proxmox.public_ip }} {{ inventory_hostname_short }}

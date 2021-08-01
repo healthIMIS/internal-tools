@@ -1,0 +1,3 @@
+---
+proxmox:
+  public_ip: "{{ hostvars[inventory_hostname]['ansible_env'].SSH_CONNECTION.split(' ')[2] }}"
