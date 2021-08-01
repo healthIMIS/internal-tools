@@ -25,7 +25,12 @@
 - name: Fail if hostname does not resolve correctly
   fail:
     msg: "Own hostname could not be resolved correctly"
-  when: resolved_ip == {{ proxmox.public_ip }}
+  when: resolved_ip == proxmox.public_ip
+
+- name: Ensure that gpg is available for the next operations
+  become: true
+  apt:
+    name: gpg
 
 - name: Add the Proxmox VE repository key
   become: true

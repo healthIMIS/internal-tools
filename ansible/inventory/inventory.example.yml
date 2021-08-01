@@ -1,5 +1,6 @@
 ---
 all:
-  dedicated:
-    hosts:
-      example.org
+  children:
+    dedicated:
+      hosts:
+        example.org
