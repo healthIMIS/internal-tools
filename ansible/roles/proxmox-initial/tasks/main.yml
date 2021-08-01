@@ -33,23 +33,10 @@
     name: gpg
 
 - name: Add the Proxmox VE repository key
-  become: true
-  ansible.builtin.apt_key:
-    id: DD4BA3917E23BF59
+  get_url:
     url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
-    keyring: /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
-
-- name: Compute sha512 sum of /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
-  stat:
-    path: /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
-    checksum_algorithm: sha512
-    get_checksum: yes
-  register: sha_proxmox_gpg_key
-
-- name: Verify sha 512hash of /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
-  fail:
-    msg: "Verification of GPG key failed"
-  when: sha_proxmox_gpg_key != '7fb03ec8a1675723d2853b84aa4fdb49a46a3bb72b9951361488bfd19b29aab0a789a4f8c7406e71a69aabbc727c936d3549731c4659ffa1a08f44db8fdcebfa'
+    dest: /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
+    checksum: sha512:7fb03ec8a1675723d2853b84aa4fdb49a46a3bb72b9951361488bfd19b29aab0a789a4f8c7406e71a69aabbc727c936d3549731c4659ffa1a08f44db8fdcebfa
 
 - name: Add the Proxmox VE repository
   become: true
