@@ -52,6 +52,13 @@
     upgrade: full
     update_cache: yes
 
+# https://serverfault.com/questions/1068990/what-is-the-most-reliable-way-to-install-ifupdown2-via-ansible
+- name: Install ifupdown2
+  become: true
+  shell: apt-get install -y ifupdown2 && systemctl restart networking
+  async: 180
+  poll: 5
+
 # Note we configure postfix later with role `postfix`
 - name: Install install proxmox-ve, postfix and open-iscsi packages
   become: true
