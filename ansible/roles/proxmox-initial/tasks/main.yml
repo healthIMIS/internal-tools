@@ -69,6 +69,7 @@
       - open-iscsi
 
 - name: Reboot host and wait for it to restart
+  become: true
   reboot:
     msg: "Reboot initiated by Ansible"
     connect_timeout: 5
