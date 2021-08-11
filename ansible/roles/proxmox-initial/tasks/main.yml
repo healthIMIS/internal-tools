@@ -1,5 +1,10 @@
 ---
 
+#########################################################################
+# This follows the official documentation provided at:                  #
+# https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye #
+#########################################################################
+
 - name: Fail if not running on Debian 11 (Bullseye)
   fail:
     msg: "Only Debian 11 (Bullseye) is supported"
@@ -11,7 +16,7 @@
     upgrade: yes
     update_cache: yes
 
-# see https://pve.proxmox.com/wiki/Install_Proxmox_VE_on_Debian_11_Bullseye
+# https://gist.github.com/rothgar/8793800
 - name: Template /etc/hosts file
   become: true
   template:

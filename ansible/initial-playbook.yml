@@ -1,0 +1,14 @@
+---
+
+- hosts: dedicated
+  gather_facts: false
+  roles:
+    - role: ssh-initial
+      tags:
+        - never
+
+- hosts: dedicated
+  roles:
+    - role: proxmox-initial
+      tags:
+        - never

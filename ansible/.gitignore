@@ -1,2 +1,3 @@
 inventory/inventory.yml
 ansible.cfg
+roles/ssh-initial/vars/main.exmaple.yml

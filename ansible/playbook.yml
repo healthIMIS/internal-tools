@@ -1,6 +1,0 @@
----
-- hosts: dedicated
-  roles:
-    - role: proxmox-initial
-      tags:
-        - never
