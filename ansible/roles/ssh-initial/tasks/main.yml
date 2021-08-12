@@ -16,9 +16,9 @@ tasks:
 
   - block:
       - name: Fall back to root user
-          connection: local
-          set_fact:
-            ansible_user: root
+        connection: local
+        set_fact:
+          ansible_user: root
 
       - name: Create 'ansible' user
         become: true
