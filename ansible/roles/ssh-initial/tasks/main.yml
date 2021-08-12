@@ -72,7 +72,7 @@
     path: "/etc/ssh/sshd_config"
     regex: "^(#)?{{item.key}}"
     line: "{{item.key}} {{item.value}}"
-    backup: "/etc/ssh/sshd_config.bk"
+    backup: 1
     validate: '/usr/sbin/sshd -T -f %s'
     state: present
   loop:
