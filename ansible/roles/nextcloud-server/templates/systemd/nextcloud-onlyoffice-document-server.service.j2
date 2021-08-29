@@ -1,0 +1,23 @@
+[Unit]
+Description=Nextcloud OnlyOffice Document Server
+After=docker.service
+Requires=docker.service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
+ExecStartPre=-/usr/bin/docker stop nextcloud-onlyoffice-document-server
+ExecStartPre=-/usr/bin/docker rm nextcloud-onlyoffice-document-server
+ExecStart=/usr/bin/docker run --rm --name nextcloud-onlyoffice-document-server \
+			--log-driver=none \
+			--network={{ nextcloud_docker_network }} \
+			-p 127.0.0.1:{{ nextcloud_onlyoffice_document_server_http_port_on_host }}:80 \
+			{{ nextcloud_onlyoffice_document_server_docker_image }}
+ExecStop=-/usr/bin/docker stop nextcloud-onlyoffice-document-server
+ExecStop=-/usr/bin/docker rm nextcloud-onlyoffice-document-server
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

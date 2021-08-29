@@ -1,0 +1,56 @@
+---
+
+- include: tasks/server_base.yml
+  tags:
+    - setup-all
+
+- include: tasks/setup_main.yml
+  tags:
+    - setup-all
+
+- include: tasks/setup_postgres.yml
+  tags:
+    - setup-all
+    - setup-postgres
+
+- include: tasks/import_postgres.yml
+  tags:
+    - import-postgres
+
+- include: tasks/upgrade_postgres.yml
+  tags:
+    - upgrade-postgres
+
+- include: tasks/setup_nextcloud.yml
+  tags:
+    - setup-all
+    - setup-nextcloud
+    - update
+
+- include: tasks/setup_onlyoffice.yml
+  tags:
+    - setup-all
+    - setup-onlyoffice
+
+- include: tasks/setup_collabora.yml
+  tags:
+    - setup-all
+    - setup-collabora
+
+# This is meant to be executed subsequently, after Nextcloud is fully setup
+- include: tasks/setup_onlyoffice_app.yml
+  tags:
+    - setup-onlyoffice-app
+
+- include: tasks/setup_collabora_app.yml
+  tags:
+    - setup-collabora-app
+
+- include: tasks/start.yml
+  tags:
+    - start
+    - update
+
+- include: tasks/setup_adjust_config.yml
+  tags:
+    - setup-adjust-config

@@ -1,0 +1,26 @@
+---
+
+- name: Ensure Nextcloud data path exists
+  file:
+    path: "{{ nextcloud_nextcloud_data_path }}"
+    state: directory
+    mode: 0755
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+
+- name: Ensure Nextcloud Docker image is pulled
+  docker_image:
+    name: "{{ nextcloud_nextcloud_docker_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+
+- name: Ensure nextcloud-apache.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-apache.service.j2"
+    dest: "/etc/systemd/system/nextcloud-apache.service"
+    mode: 0644
+
+- name: Ensure Nextcloud cronjob configured
+  template:
+    src: "{{ role_path }}/templates/cron.d/nextcloud-cron.j2"
+    dest: "/etc/cron.d/nextcloud-cron"
+    mode: 0600

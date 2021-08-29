@@ -1,0 +1,43 @@
+---
+
+#
+# Tasks related to setting up Collabora CODE
+#
+
+- name: Ensure Collabora CODE Docker image is pulled
+  docker_image:
+    name: "{{ nextcloud_collabora_code_docker_image }}"
+    source: pull
+  when: nextcloud_collabora_enabled|bool
+
+- name: Ensure nextcloud-collabora-code.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-collabora-code.service.j2"
+    dest: "/etc/systemd/system/nextcloud-collabora-code.service"
+    mode: 0644
+  when: nextcloud_collabora_enabled|bool
+
+#
+# Tasks related to getting rid of Collabora CODE (if it was previously enabled)
+#
+
+- name: Check existence of nextcloud-collabora-code service
+  stat: path="/etc/systemd/system/nextcloud-collabora-code.service"
+  register: nextcloud_collabora_service_stat
+
+- name: Ensure nextcloud-collabora-code-server is stopped
+  service: name=nextcloud-collabora-code state=stopped daemon_reload=yes
+  register: stopping_result
+  when: "not nextcloud_collabora_enabled and nextcloud_collabora_service_stat.stat.exists"
+
+- name: Ensure nextcloud-collabora-code.service doesn't exist
+  file:
+    path: "/etc/systemd/system/nextcloud-collabora-code.service"
+    state: absent
+  when: "not nextcloud_collabora_enabled and nextcloud_collabora_service_stat.stat.exists"
+
+- name: Ensure Collabora Docker image doesn't exist
+  docker_image:
+    name: "{{ nextcloud_collabora_code_docker_image }}"
+    state: absent
+  when: "not nextcloud_collabora_enabled"

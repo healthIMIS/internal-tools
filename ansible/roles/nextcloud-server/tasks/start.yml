@@ -1,0 +1,15 @@
+---
+
+- name: Ensure services autorun and are restarted
+  service: name="{{ item }}" enabled=yes state=restarted daemon_reload=yes
+  with_items:
+    - nextcloud-postgres
+    - nextcloud-apache
+
+- name: Ensure nextcloud-onlyoffice-document-server autoruns and is restarted
+  service: name=nextcloud-onlyoffice-document-server enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_onlyoffice_enabled|bool
+
+- name: Ensure nextcloud-collabora-code autoruns and is restarted
+  service: name=nextcloud-collabora-code enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_collabora_enabled|bool

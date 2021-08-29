@@ -1,0 +1,23 @@
+[Unit]
+Description=Nextcloud Collabora CODE
+After=docker.service
+Requires=docker.service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
+ExecStartPre=-/usr/bin/docker stop nextcloud-collabora-code
+ExecStartPre=-/usr/bin/docker rm nextcloud-collabora-code
+ExecStart=/usr/bin/docker run --rm --name nextcloud-collabora-code \
+			--log-driver=none \
+			--network={{ nextcloud_docker_network }} \
+			-p 127.0.0.1:{{ nextcloud_collabora_code_http_port_on_host }}:80 \
+			{{ nextcloud_collabora_code_docker_image }}
+ExecStop=-/usr/bin/docker stop nextcloud-collabora-code
+ExecStop=-/usr/bin/docker rm nextcloud-collabora-code
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

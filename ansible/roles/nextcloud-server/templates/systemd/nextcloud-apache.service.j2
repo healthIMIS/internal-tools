@@ -1,0 +1,34 @@
+[Unit]
+Description=Nextcloud Apache server
+After=docker.service
+Requires=docker.service
+Requires=nextcloud-postgres.service
+After=nextcloud-postgres.service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
+ExecStartPre=-/usr/bin/docker kill nextcloud-apache
+ExecStartPre=-/usr/bin/docker rm nextcloud-apache
+ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
+			--log-driver=none \
+			--network={{ nextcloud_docker_network }} \
+			-v {{ nextcloud_nextcloud_data_path }}:/var/www/html \
+			{% if nextcloud_nextcloud_apache_container_http_host_bind_port %}
+			-p {{ nextcloud_nextcloud_apache_container_http_host_bind_port }}:80 \
+			{% endif %}
+			{% if nextcloud_nextcloud_apache_container_memory_limit != '' %}
+				--memory={{ nextcloud_nextcloud_apache_container_memory_limit }} \
+			{% endif %}
+			{% if nextcloud_nextcloud_apache_container_memory_swap_limit != '' %}
+				--memory-swap={{ nextcloud_nextcloud_apache_container_memory_swap_limit }} \
+			{% endif %}
+			{{ nextcloud_nextcloud_docker_image }}
+ExecStop=-/usr/bin/docker kill nextcloud-apache
+ExecStop=-/usr/bin/docker rm nextcloud-apache
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

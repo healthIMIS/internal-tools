@@ -1,0 +1,41 @@
+---
+
+- name: Ensure the system is up to date
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Ensure APT usage dependencies are installed
+  apt:
+    name:
+      - ca-certificates
+    state: present
+    update_cache: yes
+
+- name: Ensure APT packages are installed
+  apt:
+    name:
+      - "{{ nextcloud_ntpd_package }}"
+      - fuse
+    state: latest
+    update_cache: yes
+
+- name: Ensure Docker is installed
+  apt:
+    name:
+      - "docker.io"
+      - "python3-docker"
+    state: latest
+  when: nextcloud_docker_installation_enabled|bool
+
+- name: Ensure Docker is started and autoruns
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: "Ensure {{ nextcloud_ntpd_service }} is started and autoruns"
+  service:
+    name: "{{ nextcloud_ntpd_service }}"
+    state: started
+    enabled: yes
