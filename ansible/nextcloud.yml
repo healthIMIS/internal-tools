@@ -1,0 +1,6 @@
+# TODO: Add LXC container creation, execute nextcloud-server within this contianer
+
+---
+- hosts: dedicated
+  roles:
+    - role: nextcloud-server
