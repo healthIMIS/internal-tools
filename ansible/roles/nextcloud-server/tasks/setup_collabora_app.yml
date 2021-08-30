@@ -1,1 +1,41 @@
 ---
+
+#
+# Tasks related to setting up the Collabora app
+#
+
+- name: Fail if Collabora not enabled
+  fail:
+    msg: "Before installing and making use of the Collabora app, you need to install the Collabora services (see `nextcloud_collabora_enabled`)"
+  when: not nextcloud_collabora_enabled
+
+- name: Ensure nextcloud-apache is started
+  service: name=nextcloud-apache state=started daemon_reload=yes
+  register: nextcloud_start
+
+- name: Wait a while, so that Nextcloud can manage to start
+  pause: seconds=7
+  when: nextcloud_start.changed
+
+- name: Install Collabora app
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings app:install richdocuments"
+  failed_when: false
+  register: collabora_install_result
+
+- name: Fail if Collabora failed to install
+  fail:
+    msg: "Collabora failed to install. Full error: {{ collabora_install_result }}"
+  when: "collabora_install_result.rc != 0 and collabora_install_result.stdout != 'richdocuments already installed'"
+
+- name: Configure Collabora app
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings config:app:set richdocuments {{ item.key }} --value=\"{{ item.value }}\""
+  with_items:
+    -
+      key: wopi_url
+      value: {{ nextcloud_collabora_external_domain }}
+
+- name: Activate Collabora app configuration
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings richdocuments:activate-config"
