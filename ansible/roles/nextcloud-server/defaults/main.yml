@@ -63,7 +63,7 @@ nextcloud_nextcloud_apache_container_memory_swap_limit: ""
 # Controls whether the nextcloud-apache container exposes its HTTP port (tcp/80 in the container).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:37150"), or empty string to not expose.
-nextcloud_nextcloud_apache_container_http_host_bind_port: "127.0.0.1:{{ nextcloud_apache_http_port_on_host }}"
+nextcloud_nextcloud_apache_container_http_host_bind_port: "0.0.0.0:{{ nextcloud_apache_http_port_on_host }}"
 
 # If `nextcloud_nginx_proxy_enabled` is set to `false`,
 # nextcloud-apache's port 80 will be exposed to the container host (127.0.0.1)
