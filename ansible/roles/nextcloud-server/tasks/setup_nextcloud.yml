@@ -24,3 +24,48 @@
     src: "{{ role_path }}/templates/cron.d/nextcloud-cron.j2"
     dest: "/etc/cron.d/nextcloud-cron"
     mode: 0600
+
+- name: Ensure postgres and nextcloud are up to run first setup
+  service: name="{{ item }}" state=started daemon_reload=yes
+  with_items:
+    - nextcloud-postgres
+    - nextcloud-apache
+  register: nextcloud_start
+
+- name: Wait a while, so that Nextcloud can manage to start
+  pause: seconds=7
+  when: nextcloud_start.changed
+
+- name: Check if nextcloud is already installed
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ"
+  failed_when: false
+  register: nextcloud_install_check_result
+
+- name: Store nextcloud install state
+  set_fact:
+    nextcloud_not_installed: "{{ true if 'Nextcloud is not installed - only a limited number of commands are available' in nextcloud_install_check_result.stdout else false }}"
+
+- name: Run nextcloud first setup  # TODO: Add data directory
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings maintenance:install --no-interaction --database \"pgsql\" --database-host \"{{ nextcloud_postgres_connection_hostname }}\" --database-name \"{{ nextcloud_postgres_db_name }}\"  --database-user \"{{ nextcloud_postgres_connection_username }}\" --database-pass \"{{ nextcloud_postgres_connection_password }}\" --admin-user \"{{ nextcloud_admin_user }}\" --admin-pass \"{{ nextcloud_admin_password }}\""
+  failed_when: false
+  register: nextcloud_install_result
+  when: nextcloud_not_installed
+
+- name: Fail if Nextcloud failed to install
+  fail:
+    msg: "Nextcloud failed to install. Full error: {{ nextcloud_install_result }}"
+  when: "nextcloud_not_installed and nextcloud_install_result.rc != 0 and nextcloud_install_result.stdout != 'Nextcloud was successfully installed'"
+
+- name: Set trusted domain
+  shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set trusted_domains 1 --value=\"{{ hostname_nextcloud }}\""
+  failed_when: false
+  register: nextcloud_trusted_domain_result
+
+- name: Ensure postgres and nextcloud are stopped
+  service: name="{{ item }}" state=stopped daemon_reload=yes
+  with_items:
+    - nextcloud-apache
+    - nextcloud-postgres

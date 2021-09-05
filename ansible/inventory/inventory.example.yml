@@ -3,4 +3,7 @@ all:
   children:
     dedicated:
       hosts:
-        example.org
+        example.org:
+          host_specific_nextcloud_hostname: <cloud.example.org>
+          host_specific_nextcloud_admin_user: admin
+          host_specific_nextcloud_admin_password: <your_super_secure_password>

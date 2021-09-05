@@ -1,5 +1,8 @@
 hostname_nextcloud: "{{ host_specific_nextcloud_hostname }}"
 
+nextcloud_admin_user: "{{ host_specific_nextcloud_admin_user }}"
+nextcloud_admin_password: "{{ host_specific_nextcloud_admin_password }}"
+
 nextcloud_user_username: nextcloud
 nextcloud_user_uid: 3991
 nextcloud_user_gid: 3991
