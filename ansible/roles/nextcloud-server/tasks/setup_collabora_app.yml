@@ -34,7 +34,7 @@
   with_items:
     -
       key: wopi_url
-      value: {{ nextcloud_collabora_external_domain }}
+      value: "{{ nextcloud_collabora_external_domain }}"
 
 - name: Activate Collabora app configuration
   shell:
