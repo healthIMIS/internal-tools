@@ -6,7 +6,7 @@
 # https://serverfault.com/questions/840156/create-non-root-user-and-disable-root-ssh-in-ansible
 # https://stackoverflow.com/questions/56436906/how-to-cleanly-edit-sshd-config-for-basic-security-options-in-an-ansible-playboo
 
-- name: Test SSH connection and determine if the {{ ansible_user }} user is already configured.
+- name: Test SSH connection and determine if the {{ ansible_service_user }} user is already configured.
   ping:
   ignore_unreachable: true
   ignore_errors: true
@@ -19,10 +19,10 @@
       set_fact:
         ansible_user: root
 
-    - name: Create 'ansible' user
+    - name: Create '{{ ansible_service_user }}' user
       become: true
       user:
-        name: ansible
+        name: "{{ ansible_service_user }}"
         comment: "Ansible user"
         shell: /bin/bash
 
@@ -51,17 +51,17 @@
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
     validate: visudo -cf %s
 
-- name: Add ansible user to 'wheel' group
+- name: Add {{ ansible_service_user }} user to 'wheel' group
   become: true
   user:
-    name: "ansible"
+    name: "{{ ansible_service_user }}"
     groups: wheel
     append: yes
 
-- name: Give trusted users ssh access to user ansible
+- name: Give trusted users ssh access to user {{ ansible_service_user }}
   become: true
   authorized_key:
-    user: ansible
+    user: "{{ ansible_service_user }}"
     key: "{{ authorized_keys|map(attribute='ssh_key')|join('\n') }}"
     exclusive: yes
 
@@ -74,16 +74,6 @@
     backup: 1
     validate: '/usr/sbin/sshd -T -f %s'
     state: present
-  loop:
-    - { key: "PermitRootLogin", value: "no" }
-    - { key: "PasswordAuthentication", value: "no" }
-    - { key: "AllowUsers", value: "ansible" }
-    - { key: "ClientAliveInterval", value: "300" }
-    - { key: "ClientAliveCountMax", value: "1" }
-    - { key: "MaxAuthTries", value: "2" }
-    - { key: "AllowTcpForwarding", value: "no" } # todo we likely need yes here in the future
-    - { key: "X11Forwarding", value: "no" }
-    - { key: "AllowAgentForwarding", value: "no" }
-    - { key: "AuthorizedKeysFile", value: ".ssh/authorized_keys" }
+  loop: "{{ lookup('dict', sshd) }}"
   notify:
     - reload sshd
