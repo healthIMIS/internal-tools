@@ -25,6 +25,13 @@
     protocol: tcp
     jump: ACCEPT
 
+- name: ALLOW HTTP traffic
+  iptables:
+    chain: INPUT
+    destination_port: '80'
+    protocol: tcp
+    jump: ACCEPT
+
 - name: ALLOW HTTPS traffic
   become: true
   iptables:
