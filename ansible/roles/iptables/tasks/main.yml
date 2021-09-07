@@ -26,6 +26,7 @@
     jump: ACCEPT
 
 - name: ALLOW HTTP traffic
+  become: true
   iptables:
     chain: INPUT
     destination_port: '80'
