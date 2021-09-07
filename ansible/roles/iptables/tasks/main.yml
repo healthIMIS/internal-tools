@@ -6,16 +6,19 @@
     name: iptables
 
 - name: Flush all firewall rules
+  become: true
   iptables:
     flush: true
 
 - name: ACCEPT ESTABLISHED on INPUT
+  become: true
   iptables:
     chain: INPUT
     ctstate: ESTABLISHED
     jump: ACCEPT
 
 - name: ALLOW SSH traffic
+  become: true
   iptables:
     chain: INPUT
     destination_port: '22'
@@ -23,6 +26,7 @@
     jump: ACCEPT
 
 - name: ALLOW HTTPS traffic
+  become: true
   iptables:
     chain: INPUT
     destination_port: '443'
@@ -30,10 +34,12 @@
     jump: ACCEPT
 
 - name: DROP INPUT
+  become: true
   iptables:
     chain: INPUT
     jump: DROP
 
 - name: Install 'iptables-persistent'
+  become: true
   apt:
     name: iptables-persistent
