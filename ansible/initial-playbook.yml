@@ -4,6 +4,7 @@
   gather_facts: false
   roles:
     - role: ssh-initial
+    - role: iptables
       tags:
         - never
 
