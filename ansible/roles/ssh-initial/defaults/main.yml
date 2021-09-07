@@ -1,0 +1,15 @@
+---
+
+ansible_service_user: "ansible"
+
+sshd:
+  PermitRootLogin: "no"
+  PasswordAuthentication: "no"
+  AllowUsers: "{{ ansible_service_user }}"
+  ClientAliveInterval: "900"
+  ClientAliveCountMax: "1"
+  MaxAuthTries: "2"
+  AllowTcpForwarding: "no"
+  X11Forwarding: "no"
+  AllowAgentForwarding: "no"
+  AuthorizedKeysFile: ".ssh/authorized_keys"
