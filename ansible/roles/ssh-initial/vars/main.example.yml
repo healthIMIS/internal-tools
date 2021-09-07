@@ -1,4 +1,4 @@
 ---
 authorized_keys:
-  - name: john doe
+  - name: john.doe
     ssh_key: ssh-rsa abcdef...
