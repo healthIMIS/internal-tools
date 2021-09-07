@@ -24,7 +24,6 @@
       user:
         name: ansible
         comment: "Ansible user"
-        # todo: add password?
         shell: /bin/bash
 
   when: ssh_test.unreachable is defined
