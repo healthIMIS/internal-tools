@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: keycloak_postgres
+    image: postgres
+    environment:
+      - POSTGRES_DB={{ keycloak.db_name }}
+      - POSTGRES_USER={{ keycloak.db_user }}
+      - POSTGRES_PASSWORD={{ keycloak.db_password }}
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak:latest
+    environment:
+      - KEYCLOAK_USER={{ keycloak.admin_user }}
+      - KEYCLOAK_PASSWORD={{ keycloak.admin_password }}
+      - DB_ADDR={{ keycloak.db_host }}
+      - DB_USER={{ keycloak.db_user }}
+      - DB_PASSWORD={{ keycloak.db_password }}
+      - PROXY_ADDRESS_FORWARDING=true
+networks:
+  default:
+    external: true
+    name: matrix
