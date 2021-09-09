@@ -1,0 +1,44 @@
+---
+
+- name: Ensure the system is up to date
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Ensure nginx is installed
+  apt:
+    name:
+      - nginx
+    state: present
+    update_cache: yes
+
+- name: Ensure nginx base config is installed
+  template:
+    src: "{{ role_path }}/templates/nginx/base/default.j2"
+    dest: "/etc/nginx/sites-available/default"
+    mode: 0644
+
+- name: Ensure periodic restarting of nginx is configured
+  template:
+    src: "{{ role_path }}/templates/cron.d/nginx-periodic-restarter.j2"
+    dest: "/etc/cron.d/nginx-periodic-restarter"
+    mode: 0600
+
+- name: Ensure nextcloud config is enabled
+  template:
+    src: "{{ role_path }}/templates/nginx/services/nextcloud.j2"
+    dest: "/etc/nginx/sites-available/nextcloud"
+    mode: 0644
+  when: nextcloud_enabled
+
+- name: Ensure service nginx is enabled and ensure it is not masked
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+
+- name: Make sure nginx is running, restart if it was running
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nginx

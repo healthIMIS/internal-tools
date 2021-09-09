@@ -1,0 +1,36 @@
+# Redirect all http traffic to https
+server {
+        # Do not send identification
+        server_tokens off;
+
+        return 301 https://$host$request_uri;
+        server_name *.{{ inventory_hostname }} {{ inventory_hostname }};
+        return 404;
+
+        listen 80;
+}
+
+# Main 443 proxy (SSL termination)
+server {
+        server_tokens off;
+
+        root /nowhere;
+
+        listen [::]:443 ssl ipv6only=on;
+        listen 443 ssl;
+
+        # Certbot created files, mounted from host
+        ssl_certificate {{ persistant_data_path }}/ssl/fullchain.pem;
+        ssl_certificate_key {{ persistant_data_path }}/ssl/privkey.pem;
+        ssl_dhparam {{ persistant_data_path }}/ssl/ssl-dhparams.pem;
+
+        # SSL configuration, parameters taken from certbot template https://github.com/certbot/certbot/blob/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
+        ssl_session_cache shared:le_nginx_SSL:10m;
+        ssl_session_timeout 1440m;
+        ssl_session_tickets off;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers off;
+
+        ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA";
+}

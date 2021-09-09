@@ -1,0 +1,4 @@
+# Periodically reload nginx to apply changed SSL certificates
+# Restart will happen every day at 1 AM.
+
+0 1 * * * root /usr/bin/systemctl reload nginx.service

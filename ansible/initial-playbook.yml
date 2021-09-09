@@ -22,3 +22,7 @@
       tags:
         - users
         - initial
+
+- hosts: nginx
+  roles:
+    - role: nginx-proxy

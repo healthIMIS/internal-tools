@@ -1,0 +1,40 @@
+# THIS IS JUST AN EXAMPLE
+# Configuration for nextcloud container
+server {
+        server_tokens off;
+
+        root /nowhere;
+
+        listen [::]:443;
+        listen 443;
+
+        server_name cloud.{{ inventory_hostname }};
+
+        location / {
+                proxy_pass_header Authorization;
+                proxy_pass http://{{ nextcloud_internal_ip }};
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP  $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_http_version 1.1;
+                proxy_set_header Connection "";
+                proxy_buffering off;
+                proxy_request_buffering off;
+                client_max_body_size 0;
+                proxy_read_timeout  36000s;
+                proxy_redirect off;
+                proxy_ssl_session_reuse off;
+        }
+
+        location /.well-known/carddav {
+                rewrite /.well-known/carddav /remote.php/dav;
+        }
+
+        location /.well-known/caldav {
+                rewrite /.well-known/caldav /remote.php/dav;
+        }
+
+        location ^~ /.well-known {
+                return 301 /index.php$uri;
+        }
+}
