@@ -1,0 +1,124 @@
+---
+# install docker and docker compose (on debian)
+
+- name: check if docker and docker-compose are present
+  ansible.builtin.command: docker --version && docker-compose --version
+  register: docker_and_compose_present
+
+- name: update apt packages
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+  when: docker_and_compose_present is failed
+
+- name: install packages for apt add repository over HTTPS
+  become: yes
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    state: latest
+    update_cache: yes
+  loop:
+    - git
+    - apt-transport-https
+    - ca-certificates
+    - wget
+    - software-properties-common
+    - gnupg2
+    - curl
+  when: docker_and_compose_present is failed
+
+- name: add apt signing key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+  when: docker_and_compose_present is failed
+
+- name: add docker official repository for debian
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+    state: present
+  when: docker_and_compose_present is failed
+
+- name: update package index
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+  when: docker_and_compose_present is failed
+
+- name: install docker
+  apt:
+    name: "docker-ce"
+    state: latest
+  when: docker_and_compose_present is failed
+
+- name: Update apt cache and make sure pip is installed
+  apt:
+    name: python3-pip
+    update_cache: yes
+  when: docker_and_compose_present is failed
+
+- name: update pip and install docker-compose
+  pip:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - pip
+    - docker-compose
+  when: docker_and_compose_present is failed
+
+
+# place compose file start containers
+
+- name: create working directory
+  ansible.builtin.file:
+    path: "/opt/keycloak"
+    state: directory
+    mode: 0777
+
+- name: place docker-compose file
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "/opt/keycloak/docker-compose.yml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start containers with docker_compose
+  docker_compose:
+    project_src: "/opt/keycloak"
+    state: present
+  register: start_containers
+
+- name: wait a few seconds, so that containers can start (or fail)
+  wait_for:
+    timeout: 10
+  become: false
+  delegate_to: 127.0.0.1
+  when: start_containers.changed
+
+
+# setup realm and client in keycloak 
+
+- name: start admin session via keycloak cli
+  ansible.builtin.command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server https://{{ keycloak.keycloak_url|quote }}/auth --realm master --user {{ keycloak.admin_user|quote }} --password {{ keycloak.admin_password|quote }}
+
+- name: check if realm {{ keycloak.realm_name|quote }} exists
+  ansible.builtin.command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get realms --fields realm | grep -q {{ keycloak.realm_name|quote }}; echo $?'
+  register: realm_present
+
+- name: create realm
+  ansible.builtin.command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create realms -s realm={{ keycloak.realm_name|quote }} -s enabled=true 
+  when: realm_present.stdout == "1"
+
+- name: check if client synapse exists
+  ansible.builtin.command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get clients -r {{ keycloak.realm_name|quote }} --fields clientId | grep -q synapse; echo $?'
+  register: client_present
+
+- name: create synapse client
+  ansible.builtin.command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create clients -r {{ keycloak.realm_name|quote }} -s clientId=synapse -s enabled=true -s 'redirectUris=["https://matrix.{{ keycloak.base_url|quote }}/_synapse/client/oidc/callback"]' -s bearerOnly=false -s publicClient=false -s standardFlowEnabled=true -s directAccessGrantsEnabled=true -s secret={{ keycloak.client_secret|quote }}
+  when: client_present.stdout == "1"
