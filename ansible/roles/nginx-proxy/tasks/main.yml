@@ -12,10 +12,16 @@
     state: present
     update_cache: yes
 
-- name: Ensure nginx base config is installed
+- name: Ensure nginx.conf is present
+  template:
+    src: "{{ role_path }}/templates/nginx/base/nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+    mode: 0644
+
+- name: Ensure sites-enabled/default is present
   template:
     src: "{{ role_path }}/templates/nginx/base/default.j2"
-    dest: "/etc/nginx/sites-available/default"
+    dest: "/etc/nginx/sites-enabled/default"
     mode: 0644
 
 - name: Ensure periodic restarting of nginx is configured
