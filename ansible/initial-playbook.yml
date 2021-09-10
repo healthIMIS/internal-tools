@@ -12,3 +12,7 @@
     - role: proxmox-initial
       tags:
         - never
+    - role: host-users
+      tags:
+        - users
+        - never

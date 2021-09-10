@@ -1,0 +1,5 @@
+ansible_service_user: "ansible"
+
+users:
+  john.doe:
+    ssh_key: ssh-ed25519 ABCDEFG

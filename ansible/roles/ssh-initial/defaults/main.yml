@@ -1,7 +1,5 @@
 ---
 
-ansible_service_user: "ansible"
-
 sshd:
   PermitRootLogin: "no"
   PasswordAuthentication: "no"
