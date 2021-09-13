@@ -18,3 +18,7 @@
     - role: proxmox-initial
       tags:
         - initial
+    - role: host-users
+      tags:
+        - users
+        - initial

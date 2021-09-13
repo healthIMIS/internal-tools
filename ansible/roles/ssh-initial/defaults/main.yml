@@ -1,4 +1,5 @@
 ---
+
 sshd:
   PermitRootLogin: "no"
   PasswordAuthentication: "no"

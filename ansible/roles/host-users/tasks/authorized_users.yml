@@ -1,0 +1,14 @@
+---
+
+- name: Create user '{{ item.key }}'
+  become: true
+  user:
+    name: "{{ item.key }}"
+    shell: /bin/bash
+
+- name: Add authorized keys for user '{{ item.key }}'
+  become: true
+  authorized_key:
+    user: "{{ item.key }}"
+    key: "{{ item.value.ssh_key }}"
+    exclusive: yes

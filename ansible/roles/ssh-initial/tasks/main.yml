@@ -4,7 +4,7 @@
   become: true
   authorized_key:
     user: "{{ ansible_service_user }}"
-    key: "{{ authorized_keys|map(attribute='ssh_key')|join('\n') }}"
+    key: "{{ ansible_authorized_keys|map('extract', users)|map(attribute='ssh_key')|join('\n') }}"
     exclusive: yes
 
 - name: Edit sshd config file
