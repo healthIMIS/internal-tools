@@ -17,6 +17,23 @@
     ctstate: ESTABLISHED
     jump: ACCEPT
 
+# Debian 11 needs this for SSH access
+- name: ACCEPT all loopback traffic
+  become: true
+  iptables:
+    action: append
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+
+- name: ACCEPT DNS
+  become: true
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: "53"
+    jump: ACCEPT
+
 - name: ALLOW SSH traffic
   become: true
   iptables:

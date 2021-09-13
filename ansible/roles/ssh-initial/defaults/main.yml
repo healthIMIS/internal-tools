@@ -1,7 +1,4 @@
 ---
-
-ansible_service_user: "ansible"
-
 sshd:
   PermitRootLogin: "no"
   PasswordAuthentication: "no"
@@ -13,3 +10,4 @@ sshd:
   X11Forwarding: "no"
   AllowAgentForwarding: "no"
   AuthorizedKeysFile: ".ssh/authorized_keys"
+  UseDNS: "no"
