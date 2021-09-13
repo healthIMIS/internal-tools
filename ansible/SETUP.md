@@ -9,7 +9,7 @@ HOST example.org # adjust to domain
     ControlMaster auto
     ControlPath ~/.ssh/cm-%r@%h:%p
     ControlPersist 5m
-    IdentifyFile ~/.ssh/my_key
+    IdentityFile ~/.ssh/my_key
 
 Host 10.10.10.*
     ProxyCommand ssh -W %h:%p example.org # tunnel through the host defined above
@@ -19,4 +19,4 @@ with this config, you can easily connect to the host machine running the setup w
 service running on this host by e.g., `ssh 10.10.10.2`.
 
 **Important:** If the SSH connection does stop working at any point in time and the host become
-unreachable, please remove the control socket (i.e., `~/.ssh/cm-%r@%h:%p`) and try again. 
+unreachable, please remove the control socket (i.e., `~/.ssh/cm-%r@%h:%p`) and try again.
