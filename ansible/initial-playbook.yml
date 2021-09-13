@@ -3,16 +3,22 @@
 - hosts: dedicated
   gather_facts: false
   roles:
-    - role: ssh-initial
+    - role: user-initial
       tags:
-        - never
+        - initial
 
 - hosts: dedicated
   roles:
+    - role: ssh-initial
+      tags:
+        - initial
+    - role: iptables
+      tags:
+        - initial
     - role: proxmox-initial
       tags:
-        - never
+        - initial
     - role: host-users
       tags:
         - users
-        - never
+        - initial

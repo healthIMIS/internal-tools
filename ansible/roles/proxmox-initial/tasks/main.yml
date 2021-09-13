@@ -23,6 +23,12 @@
     src: etc/hosts.j2
     dest: /etc/hosts
 
+- name: Set a hostname to {{ inventory_hostname }}
+  become: true
+  hostname:
+    name: "{{ inventory_hostname }}"
+    use: systemd
+
 - name: Resolve own hostname
   shell: hostname --ip-address
   register: resolved_ip
@@ -65,13 +71,27 @@
   poll: 5
 
 # Note we configure postfix later with role `postfix`
-- name: Install install proxmox-ve, postfix and open-iscsi packages
+- name: Install proxmox-ve, postfix and open-iscsi packages
   become: true
   apt:
     pkg:
       - proxmox-ve
       - postfix
       - open-iscsi
+
+- name: Disable enterprise package
+  become: true
+  lineinfile:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: '^deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise'
+    line: '# deb https://enterprise.proxmox.com/debian/pve bullseye pve-enterprise'
+
+
+- name: Add Proxmox VE No-Subscription repository
+  become: true
+  apt_repository:
+    repo: deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+    state: present
 
 - name: Reboot host and wait for it to restart
   become: true
@@ -87,3 +107,19 @@
   apt:
     name: os-prober
     state: absent
+
+# todo add root user
+# todo setup network https://docs.ansible.com/ansible/latest/collections/community/general/interfaces_file_module.html
+# https://localhost:8080/pve-docs/chapter-sysadmin.html#sysadmin_network_configuration
+#auto vmbr0
+##private sub network
+#iface vmbr0 inet static
+#        address  10.10.10.1
+#        netmask  255.255.255.0
+#        bridge-ports none
+#        bridge-stp off
+#        bridge-fd 0
+#
+#        post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
+#        post-up   iptables -t nat -A POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
+#        post-down iptables -t nat -D POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
