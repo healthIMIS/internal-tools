@@ -1,4 +1,5 @@
 persistant_data_path: "/mnt/persistant"
 
-nextcloud_enabled: false
-nextcloud_internal_ip: "10.0.0.0"
+nextcloud:
+  enabled: false
+  internal_ip: "10.0.0.0"

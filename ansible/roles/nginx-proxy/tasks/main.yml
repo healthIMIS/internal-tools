@@ -30,12 +30,14 @@
     dest: "/etc/cron.d/nginx-periodic-restarter"
     mode: 0600
 
-- name: Ensure nextcloud config is enabled
+- name: Ensure service configs are enabled
   template:
-    src: "{{ role_path }}/templates/nginx/services/nextcloud.j2"
-    dest: "/etc/nginx/sites-available/nextcloud"
+    src: "{{ role_path }}/templates/nginx/services/{{ item }}.j2"
+    dest: "/etc/nginx/sites-available/{{ item }}"
     mode: 0644
-  when: nextcloud_enabled
+  when: {{ item }}.enabled
+  loop:
+    - nextcloud
 
 - name: Ensure service nginx is enabled and ensure it is not masked
   systemd:
