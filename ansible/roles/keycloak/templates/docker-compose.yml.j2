@@ -17,7 +17,3 @@ services:
       - DB_USER={{ keycloak.db_user }}
       - DB_PASSWORD={{ keycloak.db_password }}
       - PROXY_ADDRESS_FORWARDING=true
-networks:
-  default:
-    external: true
-    name: matrix
