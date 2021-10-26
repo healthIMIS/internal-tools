@@ -53,3 +53,15 @@ matrix_synapse_configuration_extension_yaml: |
         config:
           localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
           display_name_template: "{% raw %}{{ user.name }}{% endraw %}"
+
+keycloak:
+  db_host: postgres
+  db_name: keycloak
+  db_user: postgres
+  db_password: 9Sdk7ns3K922Mcsd2ChangeMe
+  admin_user: test
+  admin_password: 8Sjn6HBDo228sH2h1jChangeMe
+  realm_name: IMIS
+  base_url: mydomain.com
+  keycloak_url: auth.mydomain.com
+  client_secret: fd9b7d16-a2e3-4d8d-99af-b6bChangeMe
