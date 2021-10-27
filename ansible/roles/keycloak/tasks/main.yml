@@ -3,6 +3,7 @@
 
 - name: check if docker and docker-compose are present
   ansible.builtin.command: docker --version && docker-compose --version
+  ignore_errors: yes
   register: docker_and_compose_present
 
 - name: update apt packages
@@ -35,6 +36,7 @@
     url: https://download.docker.com/linux/debian/gpg
     state: present
   when: docker_and_compose_present is failed
+
 
 - name: add docker official repository for debian
   apt_repository:
@@ -96,7 +98,7 @@
 
 - name: wait a few seconds, so that containers can start (or fail)
   wait_for:
-    timeout: 10
+    timeout: 15
   become: false
   delegate_to: 127.0.0.1
   when: start_containers.changed

@@ -54,6 +54,15 @@ matrix_synapse_configuration_extension_yaml: |
           localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
           display_name_template: "{% raw %}{{ user.name }}{% endraw %}"
 
+
+matrix_jitsi_enabled: true
+ 
+matrix_jitsi_jicofo_auth_password: agebdcc6aa6d882c6e974da8ChangeMe
+matrix_jitsi_jvb_auth_password: 4sc3d4badd697a3b5efd2d36ChangeMe
+matrix_jitsi_jibri_recorder_password: 7ef64cdc3616f230f886119bChangeMe
+matrix_jitsi_jibri_xmpp_password: 14cbb837cd76cad1c387b7ccChangeMe
+
+
 keycloak:
   db_host: postgres
   db_name: keycloak
