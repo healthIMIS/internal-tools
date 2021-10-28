@@ -2,8 +2,7 @@
 # install docker and docker compose (on debian)
 
 - name: check if docker and docker-compose are present
-  ansible.builtin.command: docker --version && docker-compose --version
-  ignore_errors: yes
+  ansible.builtin.command: bash -c 'docker --version > /dev/null 2>&1 && docker-compose --version > /dev/null 2>&1; echo $?'
   register: docker_and_compose_present
 
 - name: update apt packages
@@ -12,7 +11,7 @@
     state: latest
     update_cache: yes
     force_apt_get: yes
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present.stdout != "0"
 
 - name: install packages for apt add repository over HTTPS
   become: yes
@@ -29,20 +28,20 @@
     - software-properties-common
     - gnupg2
     - curl
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 - name: add apt signing key
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 
 - name: add docker official repository for debian
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/debian buster stable
     state: present
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 - name: update package index
   become: yes
@@ -50,19 +49,19 @@
     state: latest
     update_cache: yes
     force_apt_get: yes
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 - name: install docker
   apt:
     name: "docker-ce"
     state: latest
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 - name: Update apt cache and make sure pip is installed
   apt:
     name: python3-pip
     update_cache: yes
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 - name: update pip and install docker-compose
   pip:
@@ -71,7 +70,7 @@
   loop:
     - pip
     - docker-compose
-  when: docker_and_compose_present is failed
+  when: docker_and_compose_present != "0"
 
 
 # place compose file start containers
