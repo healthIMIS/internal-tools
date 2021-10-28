@@ -33,11 +33,43 @@
 - name: Ensure service configs are enabled
   template:
     src: "{{ role_path }}/templates/nginx/services/{{ item }}.j2"
-    dest: "/etc/nginx/sites-available/{{ item }}"
+    dest: "/etc/nginx/conf.d/{{ item }}.conf"
+    force: no
     mode: 0644
   when: "{{ item }}.enabled"
   loop:
     - nextcloud
+    - keycloak
+    - basedomain
+
+- name: Ensure certbot and its dependencies are installed
+  apt:
+    name:
+      - python3-acme 
+      - python3-certbot 
+      - python3-mock 
+      - python3-openssl 
+      - python3-pkg-resources 
+      - python3-pyparsing 
+      - python3-zope.interface
+      - python3-certbot-nginx
+    state: present
+    update_cache: yes
+  when: basedomain.install_ssl_certificates
+
+- name: Ensure Let's Encrypt certificate is installed
+  command: "certbot --nginx -d {{ basedomain.domain }} -d auth.{{ basedomain.domain }} -d jitsi.{{ basedomain.domain }} -d matrix.{{ basedomain.domain }} -d element.{{ basedomain.domain }}  -m {{ basedomain.email }} --agree-tos --noninteractive --redirect"
+  when: basedomain.install_ssl_certificates
+
+- name: Make sure there is a cron job for cert renewal
+  cron: name=letsencrypt_renewal special_time=monthly job="/usr/bin/certbot renew"
+  when: basedomain.install_ssl_certificates
+
+- name: Ensure nginx user is in the matrix group
+  user:
+    name: www-data
+    groups: matrix
+    append: yes
 
 - name: Ensure service nginx is enabled and ensure it is not masked
   systemd:

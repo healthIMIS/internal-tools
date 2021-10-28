@@ -3,3 +3,12 @@ persistant_data_path: "/mnt/persistant"
 nextcloud:
   enabled: false
   internal_ip: "10.0.0.0"
+
+keycloak:
+  enabled: false
+
+basedomain:
+  enabled: false
+  domain: example.com
+  email: contact@example.com
+  install_ssl_certificates: false
