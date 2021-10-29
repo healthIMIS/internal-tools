@@ -1,9 +1,9 @@
 server {
 
-	server_name {{ basedomain.domain }};
+	server_name {{ base_url }};
 	
 	location /.well-known/matrix {
-		proxy_pass https://matrix.{{ basedomain.domain }}/.well-known/matrix;
+		proxy_pass https://matrix.{{ base_url }}/.well-known/matrix;
 		proxy_set_header X-Forwarded-For $remote_addr;
 	}
 

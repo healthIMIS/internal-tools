@@ -40,7 +40,7 @@
   loop:
     - nextcloud
     - keycloak
-    - basedomain
+    - base
 
 - name: Ensure certbot and its dependencies are installed
   apt:
@@ -55,15 +55,15 @@
       - python3-certbot-nginx
     state: present
     update_cache: yes
-  when: basedomain.install_ssl_certificates
+  when: install_ssl_certificates
 
 - name: Ensure Let's Encrypt certificate is installed
-  command: "certbot --nginx -d {{ basedomain.domain }} -d auth.{{ basedomain.domain }} -d jitsi.{{ basedomain.domain }} -d matrix.{{ basedomain.domain }} -d element.{{ basedomain.domain }}  -m {{ basedomain.email }} --agree-tos --noninteractive --redirect"
-  when: basedomain.install_ssl_certificates
+  command: "certbot --nginx -d {{ base_url }} -d {{ keycloak.url }} -d jitsi.{{ base_url }} -d matrix.{{ base_url }} -d element.{{ base_url }}  -m {{ ssl_email }} --agree-tos --noninteractive --redirect"
+  when: install_ssl_certificates
 
 - name: Make sure there is a cron job for cert renewal
   cron: name=letsencrypt_renewal special_time=monthly job="/usr/bin/certbot renew"
-  when: basedomain.install_ssl_certificates
+  when: install_ssl_certificates
 
 - name: Ensure nginx user is in the matrix group
   user:

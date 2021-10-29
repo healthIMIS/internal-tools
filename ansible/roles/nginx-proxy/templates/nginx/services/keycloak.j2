@@ -1,9 +1,9 @@
 server {
 
-	server_name auth.{{ basedomain.domain }};
+	server_name {{ keycloak.url }};
 
 	location / {
-		proxy_pass https://172.22.0.2:8443; # static ip address set in keycloak's docker-compose file
+		proxy_pass https://{{ keycloak.internal_ip }}:{{ keycloak.internal_port}};
 	        proxy_set_header Host $host;
 	        proxy_set_header X-Real-IP $remote_addr;
 	        proxy_set_header X-Forwarded-Proto $scheme;
