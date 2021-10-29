@@ -86,7 +86,7 @@
 
 - name: make sure working directory exists
   file:
-    path: "/etc/keycloak"
+    path: "{{ keycloak.working_dir }}"
     state: directory
     mode: 0777
   tags: start
@@ -94,7 +94,7 @@
 - name: ensure docker-compose file is present
   template:
     src: "docker-compose.yml.j2"
-    dest: "/opt/keycloak/docker-compose.yml"
+    dest: "{{ keycloak.working_dir }}/docker-compose.yml"
     owner: root
     group: root
     mode: 0644
@@ -109,14 +109,14 @@
 
 - name: stop containers with docker_compose
   docker_compose:
-    project_src: "/opt/keycloak"
+    project_src: "{{ keycloak.working_dir }}"
     state: absent
   register: start_containers
   tags: stop
 
 - name: ensure docker_compose containers are running
   docker_compose:
-    project_src: "/opt/keycloak"
+    project_src: "{{ keycloak.working_dir }}"
     state: present
   register: start_containers
   tags: start
