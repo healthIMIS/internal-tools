@@ -63,7 +63,21 @@ matrix_jitsi_jibri_recorder_password: 7ef64cdc3616f230f886119bChangeMe
 matrix_jitsi_jibri_xmpp_password: 14cbb837cd76cad1c387b7ccChangeMe
 
 
+base_url: mydomain.com
+install_ssl_certificates: true
+ssl_email: contact@mydomain.com
+
+base:
+  enabled: true
+
+nextcloud:
+  enabled: false
+
 keycloak:
+  enabled: true
+  url: "auth.{{ base_url }}"
+  internal_ip: "172.22.0.2"
+  internal_port: 8443
   db_host: postgres
   db_name: keycloak
   db_user: postgres
@@ -71,6 +85,4 @@ keycloak:
   admin_user: test
   admin_password: 8Sjn6HBDo228sH2h1jChangeMe
   realm_name: IMIS
-  base_url: mydomain.com
-  keycloak_url: auth.mydomain.com
   client_secret: fd9b7d16-a2e3-4d8d-99af-b6bChangeMe

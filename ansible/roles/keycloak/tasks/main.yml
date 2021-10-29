@@ -132,7 +132,7 @@
 # setup realm and client in keycloak 
 
 - name: start admin session via keycloak cli
-  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server https://{{ keycloak.keycloak_url|quote }}/auth --realm master --user {{ keycloak.admin_user|quote }} --password {{ keycloak.admin_password|quote }}
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server https://{{ keycloak.url|quote }}/auth --realm master --user {{ keycloak.admin_user|quote }} --password {{ keycloak.admin_password|quote }}
   tags: start
 
 - name: check if realm {{ keycloak.realm_name|quote }} exists
@@ -151,6 +151,6 @@
   tags: start
 
 - name: create synapse client
-  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create clients -r {{ keycloak.realm_name|quote }} -s clientId=synapse -s enabled=true -s 'redirectUris=["https://matrix.{{ keycloak.base_url|quote }}/_synapse/client/oidc/callback"]' -s bearerOnly=false -s publicClient=false -s standardFlowEnabled=true -s directAccessGrantsEnabled=true -s secret={{ keycloak.client_secret|quote }}
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create clients -r {{ keycloak.realm_name|quote }} -s clientId=synapse -s enabled=true -s 'redirectUris=["https://matrix.{{ base_url|quote }}/_synapse/client/oidc/callback"]' -s bearerOnly=false -s publicClient=false -s standardFlowEnabled=true -s directAccessGrantsEnabled=true -s secret={{ keycloak.client_secret|quote }}
   when: client_present.rc != 0
   tags: start
