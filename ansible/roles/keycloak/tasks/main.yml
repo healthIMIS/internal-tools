@@ -3,6 +3,7 @@
 
 - name: ensure docker and docker-compose are present
   command: bash -c 'docker --version > /dev/null 2>&1 && docker-compose --version > /dev/null 2>&1'
+  ignore_errors: yes
   register: docker_and_compose_present
   tags: start
 
@@ -137,6 +138,7 @@
 
 - name: check if realm {{ keycloak.realm_name|quote }} exists
   command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get realms --fields realm | grep -q {{ keycloak.realm_name|quote }}'
+  ignore_errors: yes
   register: realm_present
   tags: start
 
@@ -147,6 +149,7 @@
 
 - name: check if client synapse exists
   command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get clients -r {{ keycloak.realm_name|quote }} --fields clientId | grep -q synapse'
+  ignore_errors: yes
   register: client_present
   tags: start
 
