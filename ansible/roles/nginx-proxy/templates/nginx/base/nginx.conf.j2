@@ -23,10 +23,6 @@ http {
 
 	# SSL Settings
 
-    # Certbot created files, mounted from host
-    ssl_certificate {{ persistant_data_path }}/ssl/fullchain.pem;
-    ssl_certificate_key {{ persistant_data_path }}/ssl/privkey.pem;
-    ssl_dhparam {{ persistant_data_path }}/ssl/ssl-dhparams.pem;
 
 	ssl_protocols TLSv1.2 TLSv1.3;
 	ssl_prefer_server_ciphers on;
@@ -47,5 +43,6 @@ http {
 
 	# Virtual Host Configs
 	include /etc/nginx/conf.d/*.conf;
+        include /matrix/nginx-proxy/conf.d/*.conf;
 	include /etc/nginx/sites-enabled/*;
 }

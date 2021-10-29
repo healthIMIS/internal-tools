@@ -13,7 +13,7 @@ nextcloud:
 
 keycloak:
   enabled: false
-  url: "auth.{{ base_url }}
+  url: "auth.{{ base_url }}"
   internal_ip: "172.22.0.2"
   internal_port: 8443
 
