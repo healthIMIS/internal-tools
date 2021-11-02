@@ -4,6 +4,7 @@
   apt:
     update_cache: yes
     upgrade: yes
+  tags: start  
 
 - name: Ensure nginx is installed
   apt:
@@ -11,24 +12,28 @@
       - nginx
     state: present
     update_cache: yes
+  tags: start  
 
 - name: Ensure nginx.conf is present
   template:
     src: "{{ role_path }}/templates/nginx/base/nginx.conf.j2"
     dest: "/etc/nginx/nginx.conf"
     mode: 0644
+  tags: start  
 
-- name: Ensure sites-enabled/default is present
+- name: Ensure conf.d/default is present
   template:
     src: "{{ role_path }}/templates/nginx/base/default.j2"
     dest: "/etc/nginx/conf.d/default.conf"
     mode: 0644
+  tags: start
 
 - name: Ensure periodic restarting of nginx is configured
   template:
     src: "{{ role_path }}/templates/cron.d/nginx-periodic-restarter.j2"
     dest: "/etc/cron.d/nginx-periodic-restarter"
     mode: 0600
+  tags: start  
 
 - name: Ensure service configs are enabled
   template:
@@ -41,6 +46,7 @@
     - nextcloud
     - keycloak
     - base
+  tags: start  
 
 - name: Ensure certbot and its dependencies are installed
   apt:
@@ -56,29 +62,41 @@
     state: present
     update_cache: yes
   when: install_ssl_certificates
+  tags: start  
 
 - name: Ensure Let's Encrypt certificate is installed
   command: "certbot --nginx -d {{ base_url }} -d {{ keycloak.url }} -d jitsi.{{ base_url }} -d matrix.{{ base_url }} -d element.{{ base_url }}  -m {{ ssl_email }} --agree-tos --noninteractive --redirect"
   when: install_ssl_certificates
+  tags: start  
 
 - name: Make sure there is a cron job for cert renewal
   cron: name=letsencrypt_renewal special_time=monthly job="/usr/bin/certbot renew"
   when: install_ssl_certificates
+  tags: start  
 
 - name: Ensure nginx user is in the matrix group
   user:
     name: www-data
     groups: matrix
     append: yes
+  tags: start  
 
 - name: Ensure service nginx is enabled and ensure it is not masked
   systemd:
     name: nginx
     enabled: yes
     masked: no
+  tags: start  
+
+- name: Stop nginx
+  systemd:
+    state: stopped
+    name: nginx
+  tags: stop  
 
 - name: Make sure nginx is running, restart if it was running
   systemd:
     state: restarted
     daemon_reload: yes
     name: nginx
+  tags: start  
