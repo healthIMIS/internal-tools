@@ -101,6 +101,15 @@
     mode: 0644
   tags: start
 
+- name: ensure .env file is present
+  template:
+    src: ".env.j2"
+    dest: "{{ keycloak.working_dir }}/.env"
+    owner: root
+    group: root
+    mode: 0640
+  tags: start
+
 - name: ensure docker deamon is running
   service:
     name: docker
