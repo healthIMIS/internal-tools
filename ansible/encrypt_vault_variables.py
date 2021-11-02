@@ -37,7 +37,7 @@ def main(argv):
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('usage: encrypt_vault_variables.py -i <vaultfile> -o <passwordfile>')
+            print('usage: encrypt_vault_variables.py -i <vaultfile> -p <passwordfile>')
             sys.exit()
         elif opt in "-v":
             vault_filename = arg
