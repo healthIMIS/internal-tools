@@ -7,7 +7,7 @@ sshd:
   ClientAliveInterval: "900"
   ClientAliveCountMax: "1"
   MaxAuthTries: "2"
-  AllowTcpForwarding: "no"
+  AllowTcpForwarding: "yes"
   X11Forwarding: "no"
   AllowAgentForwarding: "no"
   AuthorizedKeysFile: ".ssh/authorized_keys"

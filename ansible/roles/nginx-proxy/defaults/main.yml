@@ -1,19 +1,6 @@
 persistant_data_path: "/mnt/persistant"
 
-base_url: example.com
-install_ssl_certificates: false
-ssl_email: contact@example.com
+install_ssl_certificates: true
 
 base:
-  enabled: false
-
-nextcloud:
-  enabled: false
-  internal_ip: "10.0.0.0"
-
-keycloak:
-  enabled: false
-  url: "auth.{{ base_url }}"
-  internal_ip: "172.22.0.2"
-  internal_port: 8443
-
+  enabled: true

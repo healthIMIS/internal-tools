@@ -1,6 +1,5 @@
-# Redirect all http traffic to https
 server {
-    listen 80;
-    server_name *.{{ inventory_hostname }} {{ inventory_hostname }};
+    listen 80 default_server;
+    server_name _;
     return 301 https://$host$request_uri;
 }
