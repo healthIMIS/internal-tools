@@ -1,12 +1,11 @@
 ---
+base_url: mydomain.com
+
 keycloak:
   db_host: postgres
   db_name: keycloak
   db_user: postgres
-  db_password: 9sj37du22z2akc8dChangeMe
   admin_user: admin
-  admin_password: 8su3am2nso9h271jChangeMe
+  working_dir: "/etc/keycloak"
   realm_name: MyRealm
-  base_url: mydomain.com
-  keycloak_url: auth.mydomain.com
-  client_secret: 5024015a-2e4e-4d75-bdef-7c5dChangeMe
+  url: "auth.{{ base_url }}"

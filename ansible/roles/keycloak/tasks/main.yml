@@ -1,10 +1,9 @@
 ---
 # install docker and docker compose (on debian)
 
-- name: ensure docker and docker-compose are present
-  command: bash -c 'docker --version > /dev/null 2>&1 && docker-compose --version > /dev/null 2>&1'
-  ignore_errors: yes
-  register: docker_and_compose_present
+- name: check if docker is present
+  command: bash -c 'docker --version > /dev/null 2>&1; echo $?'
+  register: docker_present
   tags: start
 
 - name: update apt packages
@@ -13,7 +12,7 @@
     state: latest
     update_cache: yes
     force_apt_get: yes
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
   tags: start
 
 - name: install or update packages for apt add repository over HTTPS
@@ -31,22 +30,21 @@
     - software-properties-common
     - gnupg2
     - curl
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
   tags: start
 
 - name: add apt signing key
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     state: present
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
   tags: start
-
 
 - name: add docker official repository for debian
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/debian buster stable
     state: present
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
   tags: start
 
 - name: update apt packages
@@ -55,21 +53,26 @@
     state: latest
     update_cache: yes
     force_apt_get: yes
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
   tags: start
 
-- name: ensure docker is installed
+- name: install docker
   apt:
     name: "docker-ce"
     state: latest
-  when: docker_and_compose_present.rc != 0
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: check if docker-compose is present
+  command: bash -c 'docker-compose --version > /dev/null 2>&1; echo $?'
+  register: docker_compose_present
   tags: start
 
 - name: make sure pip is installed
   apt:
     name: python3-pip
     update_cache: yes
-  when: docker_and_compose_present.rc != 0
+  when: docker_compose_present.stdout != "0"
   tags: start
 
 - name: update pip and install docker-compose
@@ -79,7 +82,7 @@
   loop:
     - pip
     - docker-compose
-  when: docker_and_compose_present.rc != 0
+  when: docker_compose_present.stdout != "0"
   tags: start
 
 
@@ -133,11 +136,12 @@
 
 - name: wait a few seconds, so that containers can start (or fail)
   wait_for:
-    timeout: 15
+    timeout: 20
   become: false
   delegate_to: 127.0.0.1
   when: start_containers.changed
   tags: start
+
 
 # setup realm and client in keycloak 
 
@@ -146,23 +150,21 @@
   tags: start
 
 - name: check if realm {{ keycloak.realm_name|quote }} exists
-  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get realms --fields realm | grep -q {{ keycloak.realm_name|quote }}'
-  ignore_errors: yes
+  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get realms --fields realm | grep -q {{ keycloak.realm_name|quote }}; echo $?'
   register: realm_present
   tags: start
 
 - name: create realm
   command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create realms -s realm={{ keycloak.realm_name|quote }} -s enabled=true 
-  when: realm_present.rc != 0 
+  when: realm_present.stdout != "0" 
   tags: start
 
 - name: check if client synapse exists
-  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get clients -r {{ keycloak.realm_name|quote }} --fields clientId | grep -q synapse'
-  ignore_errors: yes
+  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get clients -r {{ keycloak.realm_name|quote }} --fields clientId | grep -q synapse; echo $?'
   register: client_present
   tags: start
 
 - name: create synapse client
   command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create clients -r {{ keycloak.realm_name|quote }} -s clientId=synapse -s enabled=true -s 'redirectUris=["https://matrix.{{ base_url|quote }}/_synapse/client/oidc/callback"]' -s bearerOnly=false -s publicClient=false -s standardFlowEnabled=true -s directAccessGrantsEnabled=true -s secret={{ keycloak.client_secret|quote }}
-  when: client_present.rc != 0
+  when: client_present.stdout != "0"
   tags: start
