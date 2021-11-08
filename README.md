@@ -42,7 +42,7 @@ Write desired password to a file, remember it (!) and save the file afterwards:
 ```vim /tmp/password_file```   
 
 Encrypt your secrets with the password file:  
-```python3 ../encrypt_vault_variables.py -v host_vars/matrix.$DOMAIN/vault.yml -p /tmp/password_file```  
+```python3 ../utils/encrypt_vault_variables.py -v host_vars/matrix.$DOMAIN/vault.yml -p /tmp/password_file```  
 
 Remember the password (!) and delete the password file:  
 ```rm /tmp/password_file```  
