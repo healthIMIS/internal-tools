@@ -33,6 +33,7 @@
   command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
   args:
     creates: /etc/ssl/certs/dhparam.pem
+  tags: start
 
 - name: Ensure Let's Encrypt certificate is installed
   command: "certbot certonly --standalone -d {{ base_url }} -m {{ ssl_email }} --agree-tos --noninteractive --redirect --staging"
