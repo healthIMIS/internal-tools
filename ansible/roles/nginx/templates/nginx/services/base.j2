@@ -1,11 +1,12 @@
 server {
-	server_name {{ base_url }};
-	root /var/www/html;
+
+    server_name {{ base_url }};
+    root /var/www/html;
 
     location / {
-            # First attempt to serve request as file, then
-            # as directory, then fall back to displaying a 404.
-            try_files $uri $uri/ =404;
+        # First attempt to serve request as file, then
+        # as directory, then fall back to displaying a 404.
+        try_files $uri $uri/ =404;
     }
 
     index index.html index.htm index.nginx-debian.html;

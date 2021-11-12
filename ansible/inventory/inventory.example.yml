@@ -4,7 +4,7 @@ all:
     dedicated:
       hosts:
         example.org:
-  services:
-    hosts:
-      nginx:
-        ansible_host: 10.10.10.2
+    services:
+      hosts:
+        nginx:
+          ansible_host: 10.10.10.2

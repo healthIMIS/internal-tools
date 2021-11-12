@@ -14,15 +14,18 @@
       tags:
         - initial
         - never
+
     - role: iptables
       tags:
         - initial
         - never
         - iptables
+
     - role: proxmox-initial
       tags:
         - initial
         - never
+
     - role: host-users
       tags:
         - users
