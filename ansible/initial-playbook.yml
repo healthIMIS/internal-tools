@@ -48,7 +48,8 @@
   become: true
   vars_files:
     - "{{ playbook_dir }}/roles/matrix-docker-ansible-deploy/roles/matrix-synapse/vars/workers.yml"
-
+    - "{{ playbook_dir }}/roles/matrix-docker-ansible-deploy/group_vars/matrix_servers"
+    -  "{{ playbook_dir }}/vars/vault.yml"
   roles:
     - { role: roles/matrix-docker-ansible-deploy/roles/matrix-awx }
     - { role: roles/matrix-docker-ansible-deploy/roles/matrix-base }

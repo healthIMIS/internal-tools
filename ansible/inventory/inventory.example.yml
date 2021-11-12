@@ -10,3 +10,5 @@ all:
           ansible_host: 10.10.10.2
         keycloak:
           ansible_host: 10.10.10.3
+        matrix:
+          ansible_host: 10.10.10.4
