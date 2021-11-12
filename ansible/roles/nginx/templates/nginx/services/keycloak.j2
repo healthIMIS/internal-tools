@@ -1,9 +1,9 @@
 server {
 
-	server_name {{ keycloak.url }};
+	server_name {{ proxied_services.keycloak.url }};
 
 	location / {
-		proxy_pass https://{{ keycloak.internal_ip }}:{{ keycloak.internal_port}};
+		    proxy_pass https://{{ proxied_services.keycloak.internal_ip }};
 	        proxy_set_header Host $host;
 	        proxy_set_header X-Real-IP $remote_addr;
 	        proxy_set_header X-Forwarded-Proto $scheme;

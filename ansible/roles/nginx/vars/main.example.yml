@@ -1,16 +1,3 @@
 base_url: example.org
 ssl_email: web@example.org
 
-proxied_services:
-    # todo can this be removed?
-  base:
-    enabled: true
-  nextcloud:
-    enabled: false
-    internal_ip: "10.10.10.3"
-
-  keycloak:
-    enabled: false
-    url: "auth.{{ base_url }}"
-    internal_ip: "10.10.10.4"
-    internal_port: 8443

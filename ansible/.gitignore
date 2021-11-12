@@ -1,4 +1,6 @@
 inventory/inventory.yml
+inventory/group_vars/all.yml
 ansible.cfg
 group_vars/all.yml
 **/vars/main.yml
+inventory/group_vars/matrix_server.yml

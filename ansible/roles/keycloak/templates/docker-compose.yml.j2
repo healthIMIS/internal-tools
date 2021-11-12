@@ -4,18 +4,12 @@ services:
     container_name: keycloak_postgres
     image: postgres
     env_file: .env
-    networks:
-      keycloak_net:
-        ipv4_address: 172.22.0.3
   keycloak:
     container_name: keycloak
     image: jboss/keycloak:latest
     env_file: .env
-    networks:
-      keycloak_net:
-        ipv4_address: 172.22.0.2
-networks:
-  keycloak_net:
-    ipam:
-      config:
-        - subnet: 172.22.0.0/16
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    depends_on:
+      - postgres
