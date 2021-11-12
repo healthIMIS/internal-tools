@@ -1,0 +1,5 @@
+ansible_user: root
+
+proxied_services:
+  base:
+    enabled: true
