@@ -2,9 +2,20 @@ ansible_user: root
 
 proxied_services:
   base:
+    url: "{{ base_url }}"
     enabled: true
   keycloak:
     enabled: true
     url: "auth.{{ base_url }}"
     internal_ip: "10.10.10.3"
     internal_port: 8443
+    db_host: postgres
+    db_name: keycloak
+    db_user: postgres
+    db_password: "{{ vault_keycloak_db_password }}"
+    admin_user: test
+    admin_password: "{{ vault_keycloak_admin_password }}"
+    # todo realm name
+    realm_name: IMIS
+    client_secret: "{{ vault_keycloak_synapse_client_secret }}"
+    wkd_dir: "/etc/keycloak"

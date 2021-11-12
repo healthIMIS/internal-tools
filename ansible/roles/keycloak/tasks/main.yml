@@ -146,7 +146,7 @@
   tags: start
 
 
-# setup realm and client in keycloak 
+# setup realm and client in keycloak
 
 - name: start admin session via keycloak cli
   command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server https://{{ proxied_services.keycloak.url|quote }}/auth --realm master --user {{ proxied_services.keycloak.admin_user|quote }} --password {{ proxied_services.keycloak.admin_password|quote }}
@@ -159,7 +159,7 @@
 
 - name: create realm
   command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create realms -s realm={{ proxied_services.keycloak.realm_name|quote }} -s enabled=true
-  when: realm_present.stdout != "0" 
+  when: realm_present.stdout != "0"
   tags: start
 
 - name: check if client synapse exists

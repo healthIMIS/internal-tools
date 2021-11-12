@@ -38,11 +38,6 @@
       tags:
         - nginx
 
-- hosts: keycloak
-  roles:
-    - role: keycloak
-      tags:
-        - keycloak
 
 - hosts: matrix
   become: true
@@ -102,3 +97,11 @@
     - { role: roles/matrix-docker-ansible-deploy/roles/matrix-postgres-backup }
     - { role: roles/matrix-docker-ansible-deploy/roles/matrix-prometheus-postgres-exporter }
     - { role: roles/matrix-docker-ansible-deploy/roles/matrix-common-after }
+
+- hosts: keycloak
+  vars_files:
+    - "{{ playbook_dir }}/vars/vault.yml"
+  roles:
+    - role: keycloak
+      tags:
+        - keycloak
