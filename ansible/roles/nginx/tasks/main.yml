@@ -36,7 +36,7 @@
   tags: start
 
 - name: Ensure Let's Encrypt certificate is installed
-  command: "certbot certonly --standalone -d {{ base_url|quote }} -m {{ ssl_email|quote }} --agree-tos --noninteractive --redirect --staging"
+  command: "certbot certonly --standalone -d {{ base_url|quote }} -m {{ ssl_email|quote }} --agree-tos --noninteractive --redirect"
   when: install_ssl_certificates
   tags: start
 
