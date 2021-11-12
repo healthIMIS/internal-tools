@@ -3,3 +3,8 @@ ansible_user: root
 proxied_services:
   base:
     enabled: true
+  keycloak:
+    enabled: true
+    url: "auth.{{ base_url }}"
+    internal_ip: "10.10.10.3"
+    internal_port: 8443

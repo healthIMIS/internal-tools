@@ -37,3 +37,67 @@
     - role: nginx
       tags:
         - nginx
+
+- hosts: keycloak
+  roles:
+    - role: keycloak
+      tags:
+        - keycloak
+
+- hosts: matrix
+  become: true
+  vars_files:
+    - "{{ playbook_dir }}/roles/matrix-docker-ansible-deploy/roles/matrix-synapse/vars/workers.yml"
+
+  roles:
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-awx }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-base }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-dynamic-dns }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-mailer }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-postgres }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-redis }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-corporal }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-appservice-discord }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-appservice-slack }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-appservice-webhooks }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-appservice-irc }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-beeper-linkedin }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-facebook }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-hangouts }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-googlechat }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-instagram }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-signal }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-telegram }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mautrix-whatsapp }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-discord }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-groupme }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-steam }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-skype }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-slack }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-twitter }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-mx-puppet-instagram }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-sms }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bridge-heisenbridge }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bot-matrix-reminder-bot }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bot-go-neb }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-bot-mjolnir }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-synapse }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-synapse-admin }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-prometheus-node-exporter }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-prometheus }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-grafana }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-registration }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-client-element }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-client-hydrogen }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-jitsi }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-ma1sd }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-dimension }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-etherpad }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-email2matrix }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-sygnal }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-nginx-proxy }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-coturn }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-aux }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-postgres-backup }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-prometheus-postgres-exporter }
+    - { role: roles/matrix-docker-ansible-deploy/roles/matrix-common-after }
