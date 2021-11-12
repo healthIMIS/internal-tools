@@ -1,0 +1,105 @@
+---
+
+- name: Ensure the system is up to date
+  apt:
+    update_cache: yes
+    upgrade: yes
+  tags: start  
+
+- name: Ensure certbot and its dependencies are installed
+  apt:
+    name:
+      - python3-acme
+      - python3-certbot
+      - python3-mock
+      - python3-openssl
+      - python3-pkg-resources
+      - python3-pyparsing
+      - python3-zope.interface
+      - python3-certbot-nginx
+    state: present
+    update_cache: yes
+  when: install_ssl_certificates
+  tags: start
+
+- name: Stop nginx
+  systemd:
+    state: stopped
+    name: nginx
+  tags: [start, stop]
+
+- name: Create DH params
+  become: yes
+  command: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+  args:
+    creates: /etc/ssl/certs/dhparam.pem
+  tags: start
+
+- name: Ensure Let's Encrypt certificate is installed
+  command: "certbot certonly --standalone -d {{ base_url|quote }} -m {{ ssl_email|quote }} --agree-tos --noninteractive --redirect"
+  when: install_ssl_certificates
+  tags: start
+
+- name: Make sure there is a cron job for cert renewal
+  cron: name=letsencrypt_renewal special_time=monthly job="/usr/bin/certbot renew"
+  when: install_ssl_certificates
+  tags: start
+
+- name: Ensure nginx is installed
+  apt:
+    name:
+      - nginx
+    state: present
+    update_cache: yes
+  tags: start  
+
+- name: Ensure nginx.conf is present
+  template:
+    src: "{{ role_path }}/templates/nginx/default_config/nginx.conf.j2"
+    dest: "{{ nginx_config_path }}"
+    mode: 0644
+    validate: "nginx -c %s -t"
+  tags: start
+
+- name: Ensure periodic restarting of nginx is configured
+  template:
+    src: "{{ role_path }}/templates/cron.d/nginx-periodic-restarter.j2"
+    dest: "/etc/cron.d/nginx-periodic-restarter"
+    validate: "nginx -c {{ nginx_config_path }} -t"
+    mode: 0600
+  tags: start  
+
+- name: Enforce HTTP to HTTPS redirect
+  template:
+    src: "{{ role_path }}/templates/nginx/default_config/default.j2"
+    dest: "/etc/nginx/sites-enabled/default"
+    validate: "nginx -c {{ nginx_config_path }} -t"
+    mode: 0644
+  tags: start
+
+- name: Ensure service configs are enabled
+  template:
+    src: "{{ role_path }}/templates/nginx/services/{{ item.key }}.j2"
+    dest: "/etc/nginx/conf.d/{{ item.key }}.conf"
+    force: no
+    validate: "nginx -c {{ nginx_config_path }} -t"
+    mode: 0644
+  when: "{{ item.value.enabled }}"
+  loop: "{{lookup('dict', proxied_services, wantlist=True)}}"
+  tags: start  
+
+
+- name: Ensure service nginx is enabled and ensure it is not masked
+  systemd:
+    name: nginx
+    enabled: yes
+    masked: no
+  tags: start  
+
+
+- name: Make sure nginx is running, restart if it was running
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: nginx
+  tags: start  

@@ -6,19 +6,31 @@
     - role: user-initial
       tags:
         - initial
+        - never
 
 - hosts: dedicated
   roles:
     - role: ssh-initial
       tags:
         - initial
+        - never
     - role: iptables
       tags:
         - initial
+        - never
+        - iptables
     - role: proxmox-initial
       tags:
         - initial
+        - never
     - role: host-users
       tags:
         - users
         - initial
+        - never
+
+- hosts: nginx
+  roles:
+    - role: nginx
+      tags:
+        - nginx

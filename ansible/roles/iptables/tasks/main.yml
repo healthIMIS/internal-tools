@@ -64,6 +64,45 @@
     chain: INPUT
     jump: DROP
 
+
+# NAT
+- name: Forward all new HTTPS traffic to nginx container
+  become: true
+  iptables:
+    table: nat
+    chain: PREROUTING
+    protocol: tcp
+    in_interface: "{{ dedicated.interface.name }}"
+    destination: "{{ dedicated.interface.ip }}"
+    destination_port: '443'
+    jump: DNAT
+    to_destination: '10.10.10.2:443'
+    ctstate: NEW
+
+ #todo use inventory
+- name: Forward all new HTTP traffic to nginx container
+  become: true
+  iptables:
+    table: nat
+    chain: PREROUTING
+    protocol: tcp
+    in_interface: "{{ dedicated.interface.name }}"
+    destination: "{{ dedicated.interface.ip }}"
+    destination_port: '80'
+    jump: DNAT
+    to_destination: '10.10.10.2:80'
+    ctstate: NEW
+
+
+- name: NAT the container subnet
+  become: true
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    source: '10.10.10.0/24'
+    jump: SNAT
+    to_source: "{{ dedicated.interface.ip }}"
+
 - name: Install 'iptables-persistent'
   become: true
   apt:

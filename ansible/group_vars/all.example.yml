@@ -1,5 +1,9 @@
 ansible_service_user: "ansible"
 
+dedicated:
+  interface: enp35s0
+  ip: 1.2.3.4
+
 users:
   john.doe:
     ssh_key: ssh-ed25519 ABCDEFG

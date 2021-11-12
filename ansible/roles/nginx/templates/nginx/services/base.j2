@@ -1,0 +1,18 @@
+server {
+	server_name {{ base_url }};
+	root /var/www/html;
+
+    location / {
+            # First attempt to serve request as file, then
+            # as directory, then fall back to displaying a 404.
+            try_files $uri $uri/ =404;
+    }
+
+    index index.html index.htm index.nginx-debian.html;
+
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+
+    ssl_certificate /etc/letsencrypt/live/{{ base_url }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ base_url }}/privkey.pem;
+}

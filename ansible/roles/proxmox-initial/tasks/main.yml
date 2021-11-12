@@ -109,6 +109,7 @@
     state: absent
 
 # todo add root user
+- # pveum user add hans.wurst@pve -password password
 # todo setup network https://docs.ansible.com/ansible/latest/collections/community/general/interfaces_file_module.html
 # https://localhost:8080/pve-docs/chapter-sysadmin.html#sysadmin_network_configuration
 #auto vmbr0
