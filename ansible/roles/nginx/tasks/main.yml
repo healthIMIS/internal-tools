@@ -55,22 +55,25 @@
 
 - name: Ensure nginx.conf is present
   template:
-    src: "{{ role_path }}/templates/nginx/base/nginx.conf.j2"
-    dest: "/etc/nginx/nginx.conf"
+    src: "{{ role_path }}/templates/nginx/default_config/nginx.conf.j2"
+    dest: "{{ nginx_config_path }}"
     mode: 0644
+    validate: "nginx -c %s -t"
   tags: start
 
 - name: Ensure periodic restarting of nginx is configured
   template:
     src: "{{ role_path }}/templates/cron.d/nginx-periodic-restarter.j2"
     dest: "/etc/cron.d/nginx-periodic-restarter"
+    validate: "nginx -c {{ nginx_config_path }} -t"
     mode: 0600
   tags: start  
 
 - name: Enforce HTTP to HTTPS redirect
   template:
-    src: "{{ role_path }}/templates/nginx/base/default.j2"
+    src: "{{ role_path }}/templates/nginx/default_config/default.j2"
     dest: "/etc/nginx/sites-enabled/default"
+    validate: "nginx -c {{ nginx_config_path }} -t"
     mode: 0644
   tags: start
 
@@ -79,6 +82,7 @@
     src: "{{ role_path }}/templates/nginx/services/{{ item.key }}.j2"
     dest: "/etc/nginx/conf.d/{{ item.key }}.conf"
     force: no
+    validate: "nginx -c {{ nginx_config_path }} -t"
     mode: 0644
   when: "{{ item.value.enabled }}"
   loop: "{{lookup('dict', proxied_services, wantlist=True)}}"

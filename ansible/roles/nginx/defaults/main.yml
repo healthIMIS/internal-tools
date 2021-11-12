@@ -1,6 +1,6 @@
+---
 persistant_data_path: "/mnt/persistant"
-
 install_ssl_certificates: true
-
+nginx_config_path: "/etc/nginx/nginx.conf"
 base:
   enabled: true

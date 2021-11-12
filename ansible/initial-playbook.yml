@@ -31,6 +31,6 @@
 
 - hosts: nginx
   roles:
-    - role: nginx-proxy
+    - role: nginx
       tags:
         - nginx
