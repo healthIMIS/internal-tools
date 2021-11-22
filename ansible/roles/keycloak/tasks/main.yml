@@ -145,11 +145,19 @@
   when: start_containers.changed
   tags: start
 
+- name: make sure keycloak is accessible on public url
+  uri:
+    url: "https://{{ proxied_services.keycloak.url }}/auth"
+    return_content: yes
+  delegate_to: 127.0.0.1
+  register: this
+  failed_when: "'Welcome to Keycloak' not in this.content"
+  tags: start
 
 # setup realm and client in keycloak
 
 - name: start admin session via keycloak cli
-  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server https://{{ proxied_services.keycloak.url|quote }}/auth --realm master --user {{ proxied_services.keycloak.admin_user|quote }} --password {{ proxied_services.keycloak.admin_password|quote }}
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server http://{{ proxied_services.keycloak.internal_ip |quote }}/auth --realm master --user {{ proxied_services.keycloak.admin_user|quote }} --password {{ proxied_services.keycloak.admin_password|quote }}
   tags: start
 
 - name: check if realm {{ proxied_services.keycloak.realm_name|quote }} exists
