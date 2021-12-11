@@ -227,7 +227,7 @@ include as a submodule in our repository.
 - *matrix-synapse*: install synapse and set up OpenID Connect with keycloak
 - *matrix-client-element*: install element client
 - *matrix-jitsi*: install jitsi and configure element to use it for in-chat video and audio calls
-- *matrix-ma1sd*: install ma1sd identity server
+- *matrix-ma1sd*: install ma1sd matrix identity server
 - *matrix-nginx-proxy*: do not install nginx-proxy, but create nginx configuration files for synapse, jitsi and more
 - *matrix-coturn*: install coturn turn server and configure jitsi to use it
 
@@ -260,15 +260,14 @@ This project makes use of many awesome open source projects!
 We want to thank all contributors for their great work and give credit to those who provided the base for this setup.  
 
 You can find the projects and their source here:
-- [matrix-docker-ansible-deploy](https://github.com/spantaleev/matrix-docker-ansible-deploy) which uses:
-  - [Synapse]()
-  - [Element]()
-  - [Jitsi]()
-  - [Postgres]()
-  - [Coturn]()
-  - [ma1sd]()
-- [Keycloak]()
-- [Postgres]()
-- [Nginx]()
-- [Docker]()
-- [Ansible]()
+- matrix-docker-ansible-deploy ([GitHub](https://github.com/spantaleev/matrix-docker-ansible-deploy)) which uses:
+  - Synapse  ([GitHub](https://github.com/matrix-org/synapse))
+  - Element  ([GitHub](https://github.com/vector-im/element-web))
+  - Jitsi ([Website](https://jitsi.org/), [GitHub](https://github.com/jitsi/jitsi))
+  - Postgres ([Website](https://www.postgresql.org/), [GitHub](https://github.com/postgres/postgres))
+  - Coturn ([GitHub](https://github.com/coturn/coturn))
+  - ma1sd ([GitHub](https://github.com/ma1uta/ma1sd))
+- Keycloak ([GitHub](https://github.com/keycloak/keycloak))
+- Nginx ([Website](https://nginx.org/), [GitHub](https://github.com/nginx/nginx))
+- Docker & Docker Compose ([Website](https://www.docker.com/), [GitHub](https://github.com/docker))
+- Ansible ([GitHub](https://github.com/ansible/ansible))
