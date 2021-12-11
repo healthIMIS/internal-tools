@@ -85,7 +85,6 @@
   when: docker_compose_present.stdout != "0"
   tags: start
 
-
 # place compose file, start containers
 
 - name: make sure working directory exists
@@ -113,6 +112,8 @@
     mode: 0640
   tags: start
 
+# start docker and stop containers
+
 - name: ensure docker deamon is running
   service:
     name: docker
@@ -127,15 +128,13 @@
   register: start_containers
   tags: stop
 
-# todo force recreate
-# todo add healthcheck
 - name: ensure docker_compose containers are running
   docker_compose:
     project_src: "{{ proxied_services.keycloak.wkd_dir }}"
     state: present
+    recreate: always
   register: start_containers
   tags: start
-
 
 - name: wait a few seconds, so that containers can start (or fail)
   wait_for:
