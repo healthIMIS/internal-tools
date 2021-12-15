@@ -259,15 +259,28 @@ Start matrix (synapse + element) and jitsi:
 This project makes use of many awesome open source projects!  
 We want to thank all contributors for their great work and give credit to those who provided the base for this setup.  
 
-You can find the projects and their source here:
-- matrix-docker-ansible-deploy ([GitHub](https://github.com/spantaleev/matrix-docker-ansible-deploy)) which uses:
+You can find all used third-party projects and their source and *licenses* here:
+- matrix-docker-ansible-deploy ([GitHub](https://github.com/spantaleev/matrix-docker-ansible-deploy), [*AGPL-3.0 License*](https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/LICENSE)) which uses:
   - Synapse  ([GitHub](https://github.com/matrix-org/synapse))
   - Element  ([GitHub](https://github.com/vector-im/element-web))
   - Jitsi ([Website](https://jitsi.org/), [GitHub](https://github.com/jitsi/jitsi))
   - Postgres ([Website](https://www.postgresql.org/), [GitHub](https://github.com/postgres/postgres))
   - Coturn ([GitHub](https://github.com/coturn/coturn))
   - ma1sd ([GitHub](https://github.com/ma1uta/ma1sd))
-- Keycloak ([GitHub](https://github.com/keycloak/keycloak))
-- Nginx ([Website](https://nginx.org/), [GitHub](https://github.com/nginx/nginx))
-- Docker & Docker Compose ([Website](https://www.docker.com/), [GitHub](https://github.com/docker))
-- Ansible ([GitHub](https://github.com/ansible/ansible))
+- Keycloak ([GitHub](https://github.com/keycloak/keycloak), [*Apache-2.0 License*](https://github.com/keycloak/keycloak/blob/main/LICENSE.txt))
+- Postgres ([Website](https://www.postgresql.org/), [GitHub](https://github.com/postgres/postgres), [*License*](https://github.com/postgres/postgres/blob/master/COPYRIGHT))
+- Nginx ([Website](https://nginx.org/), [GitHub](https://github.com/nginx/nginx), [*License*](https://nginx.org/LICENSE))
+- Docker ([Website](https://www.docker.com/), [GitHub](https://github.com/docker), [*Apache-2.0 License*](https://github.com/docker/cli/blob/master/LICENSE))
+- Docker Compose ([GitHub](https://github.com/docker/compose), [*Apache-2.0 License*](https://github.com/docker/compose/blob/v2/LICENSE))
+- Ansible ([GitHub](https://github.com/ansible/ansible), [*GPL-3.0 License*](https://github.com/ansible/ansible/blob/devel/COPYING))
+- Proxmox VE ([Website](https://www.proxmox.com/en/proxmox-ve), [Git](https://git.proxmox.com/), [*AGPL-3.0 License*](https://www.gnu.org/licenses/agpl-3.0.en.html))
+- Certbot ([GitHub](https://github.com/certbot/certbot), [*Apache-2.0 License*](https://github.com/certbot/certbot/blob/master/LICENSE.txt))
+- OpenSSL ([GitHub](https://github.com/openssl/openssl), [*Apache-2.0 License*](https://github.com/openssl/openssl/blob/master/LICENSE.txt))
+
+
+
+
+
+
+
+
