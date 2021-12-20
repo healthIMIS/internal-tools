@@ -9,7 +9,7 @@
   lineinfile:
     path: "/etc/ssh/sshd_config"
     regex: "^AllowUsers"
-    line: "AllowUsers {{ ansible_service_user }} {{ users.keys()|list|join }}"
+    line: "AllowUsers {{ remote_user }} {{ users.keys()|list|join }}"
     backup: 1
     validate: '/usr/sbin/sshd -T -f %s'
     state: present
