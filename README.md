@@ -29,6 +29,11 @@ and uses these tools for server management:
 **This is work in progress. Do not use it in live systems!**  
 As soon as this repository contains a complete setup which is ready to be used by others, there will be a *release*.
 
+# Contributing
+
+We are open for contributions!  
+If you consider participating, please read our [CONTRIBUTING.md](https://github.com/healthIMIS/internal-tools/blob/main/CONTRIBUTING.md) for more information.
+
 # Installation
 
 ## Requirements
@@ -261,8 +266,8 @@ We want to thank all contributors for their great work and give credit to those 
 
 You can find all used third-party projects and their source and *licenses* here:
 - matrix-docker-ansible-deploy ([GitHub](https://github.com/spantaleev/matrix-docker-ansible-deploy), [*AGPL-3.0 License*](https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/LICENSE)) which uses:
-  - Synapse  ([GitHub](https://github.com/matrix-org/synapse))
-  - Element  ([GitHub](https://github.com/vector-im/element-web))
+  - Synapse ([GitHub](https://github.com/matrix-org/synapse))
+  - Element ([GitHub](https://github.com/vector-im/element-web))
   - Jitsi ([Website](https://jitsi.org/), [GitHub](https://github.com/jitsi/jitsi))
   - Postgres ([Website](https://www.postgresql.org/), [GitHub](https://github.com/postgres/postgres))
   - Coturn ([GitHub](https://github.com/coturn/coturn))
@@ -277,7 +282,7 @@ You can find all used third-party projects and their source and *licenses* here:
 - Certbot ([GitHub](https://github.com/certbot/certbot), [*Apache-2.0 License*](https://github.com/certbot/certbot/blob/master/LICENSE.txt))
 - OpenSSL ([GitHub](https://github.com/openssl/openssl), [*Apache-2.0 License*](https://github.com/openssl/openssl/blob/master/LICENSE.txt))
 
-
+In case we missed acknowledging a third-party project used in our setup, please tell us at [community@imis-innovation.de](mailto:community@imis-innovation.de) or create a pull request!
 
 
 
