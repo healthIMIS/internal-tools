@@ -35,6 +35,8 @@
         - never
 
 - hosts: nginx
+  vars_files:
+    - "{{ playbook_dir }}/vars/vault.yml"
   roles:
     - role: nginx
       tags:
