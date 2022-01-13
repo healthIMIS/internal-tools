@@ -2,3 +2,4 @@
 ansible.cfg
 **/vars/main.yml
 vars/vault.yml
+vars/users.yml

@@ -3,7 +3,7 @@
 sshd:
   PermitRootLogin: "no"
   PasswordAuthentication: "no"
-  AllowUsers: "{{ remote_user }}"
+  AllowUsers: "{{ ansible_service_user }}"
   ClientAliveInterval: "900"
   ClientAliveCountMax: "1"
   MaxAuthTries: "2"

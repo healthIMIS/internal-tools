@@ -62,7 +62,10 @@ Set your domain:
 Copy example config:  
 ```cp host_vars/example.org.yml host_vars/$DOMAIN.yml```
 
-Change desired settings and save the file afterwards:  
+Change desired settings and save the file afterwards:
+- Interface name of the server
+- (static) IPv4 of the server
+
 ```vim host_vars/$DOMAIN.yml```
 
 ## Set up secrets:
