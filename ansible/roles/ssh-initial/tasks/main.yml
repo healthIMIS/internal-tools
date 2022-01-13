@@ -1,9 +1,9 @@
 ---
 
-- name: Give trusted users ssh access to user {{ ansible_service_user }}
+- name: Give trusted users ssh access to user {{ remote_user }}
   become: true
   authorized_key:
-    user: "{{ ansible_service_user }}"
+    user: "{{ remote_user }}"
     key: "{{ ansible_authorized_keys|map('extract', users)|map(attribute='ssh_key')|join('\n') }}"
     exclusive: yes
 
