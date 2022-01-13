@@ -5,7 +5,7 @@
 # https://serverfault.com/questions/840156/create-non-root-user-and-disable-root-ssh-in-ansible
 # https://stackoverflow.com/questions/56436906/how-to-cleanly-edit-sshd-config-for-basic-security-options-in-an-ansible-playboo
 
-- name: Test SSH connection and determine if the {{ ansible_service_user }} user is already configured.
+- name: Test SSH connection and determine if the '{{ ansible_service_user }}' user is already configured.
   ping:
   ignore_unreachable: true
   ignore_errors: true

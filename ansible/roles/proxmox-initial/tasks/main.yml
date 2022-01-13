@@ -109,9 +109,13 @@
     state: absent
 
 # todo add root user
-- # pveum user add hans.wurst@pve -password password
+# sudo pveum user add hans.wurst@pve -password password
+# sudo pveum acl modify / -user hans.wurst@pve -role Administrator
+# sudo pveam download local debian-11-standard_11.0-1_amd64.tar.gz
 # todo setup network https://docs.ansible.com/ansible/latest/collections/community/general/interfaces_file_module.html
 # https://localhost:8080/pve-docs/chapter-sysadmin.html#sysadmin_network_configuration
+# Add the following to /etc/network/interfaces
+#
 #auto vmbr0
 ##private sub network
 #iface vmbr0 inet static
@@ -122,5 +126,5 @@
 #        bridge-fd 0
 #
 #        post-up   echo 1 > /proc/sys/net/ipv4/ip_forward
-#        post-up   iptables -t nat -A POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
-#        post-down iptables -t nat -D POSTROUTING -s '10.10.10.0/24' -o eno1 -j MASQUERADE
+#
+# then execute sudo ifreload -a

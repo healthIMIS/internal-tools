@@ -1,0 +1,5 @@
+---
+
+users:
+  john.doe:
+    ssh_key: ssh-ed25519 XXXXXXXXX...

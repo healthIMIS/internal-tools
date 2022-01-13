@@ -1,0 +1,180 @@
+---
+# install docker and docker compose (on debian)
+
+- name: check if docker is present
+  command: bash -c 'docker --version > /dev/null 2>&1; echo $?'
+  register: docker_present
+  tags: start
+
+- name: update apt packages
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: install or update packages for apt add repository over HTTPS
+  become: yes
+  apt:
+    name: "{{ item }}"
+    force_apt_get: yes
+    state: latest
+    update_cache: yes
+  loop:
+    - git
+    - apt-transport-https
+    - ca-certificates
+    - wget
+    - software-properties-common
+    - gnupg2
+    - curl
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: add apt signing key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: add docker official repository for debian
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+    state: present
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: update apt packages
+  become: yes
+  apt:
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: install docker
+  apt:
+    name: "docker-ce"
+    state: latest
+  when: docker_present.stdout != "0"
+  tags: start
+
+- name: check if docker-compose is present
+  command: bash -c 'docker-compose --version > /dev/null 2>&1; echo $?'
+  register: docker_compose_present
+  tags: start
+
+- name: make sure pip is installed
+  apt:
+    name: python3-pip
+    update_cache: yes
+  when: docker_compose_present.stdout != "0"
+  tags: start
+
+- name: update pip and install docker-compose
+  pip:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - pip
+    - docker-compose
+  when: docker_compose_present.stdout != "0"
+  tags: start
+
+# place compose file, start containers
+
+- name: make sure working directory exists
+  file:
+    path: "{{ proxied_services.keycloak.wkd_dir }}"
+    state: directory
+    mode: 0777
+  tags: start
+
+- name: ensure docker-compose file is present
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ proxied_services.keycloak.wkd_dir }}/docker-compose.yml"
+    owner: root
+    group: root
+    mode: 0644
+  tags: start
+
+- name: ensure .env file is present
+  template:
+    src: ".env.j2"
+    dest: "{{ proxied_services.keycloak.wkd_dir }}/.env"
+    owner: root
+    group: root
+    mode: 0640
+  tags: start
+
+# start docker and stop containers
+
+- name: ensure docker deamon is running
+  service:
+    name: docker
+    state: started
+  become: true
+  tags: start
+
+- name: stop containers with docker_compose
+  docker_compose:
+    project_src: "{{ proxied_services.keycloak.wkd_dir }}"
+    state: absent
+  register: start_containers
+  tags: stop
+
+- name: ensure docker_compose containers are running
+  docker_compose:
+    project_src: "{{ proxied_services.keycloak.wkd_dir }}"
+    state: present
+    recreate: always
+  register: start_containers
+  tags: start
+
+- name: wait a few seconds, so that containers can start (or fail)
+  wait_for:
+    timeout: 20
+  become: false
+  delegate_to: 127.0.0.1
+  when: start_containers.changed
+  tags: start
+
+- name: make sure keycloak is accessible on public url
+  uri:
+    url: "https://{{ proxied_services.keycloak.url }}/auth"
+    return_content: yes
+  delegate_to: 127.0.0.1
+  register: this
+  failed_when: "'Welcome to Keycloak' not in this.content"
+  tags: start
+
+# setup realm and client in keycloak
+
+- name: start admin session via keycloak cli
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server http://{{ proxied_services.keycloak.internal_ip |quote }}/auth --realm master --user {{ proxied_services.keycloak.admin_user|quote }} --password {{ proxied_services.keycloak.admin_password|quote }}
+  tags: start
+
+- name: check if realm {{ proxied_services.keycloak.realm_name|quote }} exists
+  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get realms --fields realm | grep -q {{ proxied_services.keycloak.realm_name|quote }}; echo $?'
+  register: realm_present
+  tags: start
+
+- name: create realm
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create realms -s realm={{ proxied_services.keycloak.realm_name|quote }} -s enabled=true
+  when: realm_present.stdout != "0"
+  tags: start
+
+- name: check if client synapse exists
+  command: bash -c 'docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh get clients -r {{ proxied_services.keycloak.realm_name|quote }} --fields clientId | grep -q synapse; echo $?'
+  register: client_present
+  tags: start
+
+- name: create synapse client
+  command: docker exec -t keycloak /opt/jboss/keycloak/bin/kcadm.sh create clients -r {{ proxied_services.keycloak.realm_name|quote }} -s clientId=synapse -s enabled=true -s 'redirectUris=["https://matrix.{{ base_url|quote }}/_synapse/client/oidc/callback"]' -s bearerOnly=false -s publicClient=false -s standardFlowEnabled=true -s directAccessGrantsEnabled=true -s secret={{ proxied_services.keycloak.client_secret|quote }}
+  when: client_present.stdout != "0"
+  tags: start

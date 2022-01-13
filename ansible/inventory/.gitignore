@@ -1,4 +1,6 @@
 group_vars/all.yml
+!group_vars/all.example.yml
 inventory.yml
 host_vars/
 !host_vars/example.org.yml
+!host_vars/matrix.yml
