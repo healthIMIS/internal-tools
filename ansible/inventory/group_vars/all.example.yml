@@ -1,1 +1,3 @@
+base_url: example.de
+webmaster_email: webmaster@example.de
 remote_user: ansible
