@@ -105,7 +105,7 @@ TODO: additional manual steps necessary?
 (This is not yet done via ansible so you have to create the containers manually.)
 
 Use ssh to tunnel the proxmox web interface to your machine:  
-`ssh -L 8080:localhost:8006 $DOMAIN`
+`ssh -L 8080:localhost:8006 $DOMAIN -N`
 
 The web interface should now be accessible at https://localhost:8080 in your browser.
 
