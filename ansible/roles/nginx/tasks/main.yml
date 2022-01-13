@@ -84,7 +84,6 @@
   loop: "{{lookup('dict', proxied_services, wantlist=True)}}"
   tags: start  
 
-# TODO: Do not load certificates if install_ssl_certificates is false
 - name: Ensure nginx.conf is present
   template:
     src: "{{ role_path }}/templates/nginx/default_config/nginx.conf.j2"
