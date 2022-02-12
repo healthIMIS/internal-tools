@@ -2,9 +2,9 @@ matrix_domain: "{{ base_url }}"
 
 matrix_awx_enabled: false
 
-matrix_vars_yml_snapshotting_src: "{{ inventory_dir }}/host_vars/matrix.yml"
-
 matrix_ssl_lets_encrypt_support_email: "{{ webmaster_email }}"
+
+matrix_homeserver_generic_secret_key: "{{ vault_matrix_homeserver_generic_secret_key }}"
 
 matrix_coturn_turn_static_auth_secret: "{{ vault_matrix_coturn_turn_static_auth_secret }}"
 
@@ -15,17 +15,44 @@ matrix_postgres_connection_password: "{{ vault_matrix_postgres_connection_passwo
 matrix_synapse_enable_registration: false
 
 matrix_nginx_proxy_enabled: false
-
+matrix_ssl_retrieval_method: none
 matrix_nginx_proxy_proxy_matrix_client_api_forwarded_location_synapse_oidc_api_enabled: true
 
 matrix_nginx_proxy_proxy_matrix_nginx_status_enabled: true
 
-#todo realm IMIS
+matrix_jitsi_enabled: true
+matrix_jitsi_jicofo_auth_password: "{{ vault_matrix_jitsi_jicofo_auth_password }}"
+matrix_jitsi_jvb_auth_password: "{{ vault_matrix_jitsi_jvb_auth_password }}"
+matrix_jitsi_jibri_recorder_password: "{{ vault_matrix_jitsi_jibri_recorder_password }}"
+matrix_jitsi_jibri_xmpp_password: "{{ vault_matrix_jitsi_jibri_xmpp_password }}"
+
+matrix_user_uid: 991
+matrix_user_gid: 991
+
+matrix_federation_public_port: 443
+matrix_synapse_container_client_api_host_bind_port: '10.10.10.4:8008'
+matrix_synapse_container_federation_api_plain_host_bind_port: '10.10.10.4:8048'
+matrix_synapse_container_federation_api_tls_host_bind_port: '10.10.10.4:8448'
+
+matrix_client_element_container_http_host_bind_port: '10.10.10.4:8765'
+
+matrix_ma1sd_container_http_host_bind_port: '10.10.10.4:8090'
+
+matrix_jitsi_web_container_http_host_bind_port: '10.10.10.4:13080'
+matrix_jitsi_prosody_container_http_host_bind_port: '10.10.10.4:5280'
+matrix_jitsi_jvb_container_rtp_udp_host_bind_port: "10.10.10.4:{{ matrix_jitsi_jvb_rtp_udp_port }}"
+matrix_jitsi_jvb_container_rtp_tcp_host_bind_port: "10.10.10.4:{{ matrix_jitsi_jvb_rtp_tcp_port }}"
+matrix_jitsi_jvb_container_colibri_ws_host_bind_port: '10.10.10.4:12090'
+
+# although we are using synapse the playbook fails without these dendrite parameters
+matrix_dendrite_max_file_size_bytes: 10485760
+matrix_dendrite_http_bind_port: 8082
+
 matrix_synapse_configuration_extension_yaml: |
   oidc_providers:
     - idp_id: keycloak
       idp_name: "Keycloak"
-      issuer: "https://auth.{{ base_url }}.com/auth/realms/IMIS"
+      issuer: "https://{{ proxied_services.keycloak.url }}/auth/realms/{{ proxied_services.keycloak.realm_name }}"
       client_id: "synapse"
       client_secret: "{{ vault_keycloak_synapse_client_secret }}"
       scopes: ["openid", "profile"]
@@ -33,9 +60,3 @@ matrix_synapse_configuration_extension_yaml: |
         config:
           localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
           display_name_template: "{% raw %}{{ user.name }}{% endraw %}"
-matrix_jitsi_enabled: true
-
-matrix_jitsi_jicofo_auth_password: "{{ vault_matrix_jitsi_jicofo_auth_password }}"
-matrix_jitsi_jvb_auth_password: "{{ vault_matrix_jitsi_jvb_auth_password }}"
-matrix_jitsi_jibri_recorder_password: "{{ vault_matrix_jitsi_jibri_recorder_password }}"
-matrix_jitsi_jibri_xmpp_password: "{{ vault_matrix_jitsi_jibri_xmpp_password }}"
