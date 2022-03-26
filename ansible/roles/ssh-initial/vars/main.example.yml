@@ -1,4 +1,6 @@
 ---
 
 ansible_authorized_keys:
-  - john.doe
+  users:
+    - name: john.doe
+      ssh_key: ssh-ed25519 XXXXXXXXX...
