@@ -4,7 +4,7 @@
   become: true
   authorized_key:
     user: "{{ ansible_service_user }}"
-    key: "{{ ansible_authorized_keys|map('extract', users)|map(attribute='ssh_key')|join('\n') }}"
+    key: "{{ ansible_authorized_keys.get('users') | map(attribute='ssh_key') | join('\n') }}"
     exclusive: yes
 
 - name: Edit sshd config file
@@ -24,3 +24,6 @@
   connection: local
   set_fact:
     ansible_user: "{{ ansible_service_user }}"
+
+- name: Ensure that the reload handler will run
+  meta: flush_handlers
