@@ -19,3 +19,8 @@
   loop: "{{ lookup('dict', sshd) }}"
   notify:
     - reload sshd
+
+- name: Switch to '{{ ansible_service_user }}' to end root usage
+  connection: local
+  set_fact:
+    ansible_user: "{{ ansible_service_user }}"
