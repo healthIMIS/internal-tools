@@ -1,0 +1,6 @@
+---
+- name: Restart networking
+  become: true
+  service:
+    name: networking
+    state: restarted

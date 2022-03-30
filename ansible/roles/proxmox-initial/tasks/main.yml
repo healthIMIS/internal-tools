@@ -16,6 +16,18 @@
     upgrade: yes
     update_cache: yes
 
+- name: Configure the chosen IP address to be static
+  become: true
+  template:
+    src: etc/network/interfaces
+    dest: /etc/network/interfaces
+  when: configure_static_ip == true
+  notify:
+    - Restart networking
+
+- name: Ensure the static IP address config has been applied
+  meta: flush_handlers
+
 # https://gist.github.com/rothgar/8793800
 - name: Template /etc/hosts file
   become: true

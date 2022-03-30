@@ -1,0 +1,20 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto {{ interface.name }}
+iface {{ interface.name }} inet static
+    address {{ interface.ip }}
+    gateway {{ interface.gateway }}
+    netmask {{ interface.netmask }}
+    dns-nameservers {{ interface.dns }}
+
+# This is an autoconfigured IPv6 interface
+# NOTICE: The IPv6 interface has been set to manual because of problems with ifupdown2 and auto-IPv6 configurations
+iface {{ interface.name }} inet6 manual
