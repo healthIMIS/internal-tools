@@ -1,5 +1,11 @@
 ansible_user: ansible
 
+configure_static_ip: false
+
 interface:
   name: enp35s0
   ip: 1.2.3.4
+  # The following variables are only required if configure_static_ip is true
+  gateway: 1.2.3.4
+  netmask: 255.255.255.0
+  dns: 1.1.1.1
