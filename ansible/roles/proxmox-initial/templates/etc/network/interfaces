@@ -16,5 +16,5 @@ iface {{ interface.name }} inet static
     dns-nameservers {{ interface.dns }}
 
 # This is an autoconfigured IPv6 interface
-# NOTICE: The IPv6 interface has been disabled because of problems with ifupdown2 and auto-IPv6 configurations
-# iface {{ interface.name }} inet6 auto
+# NOTICE: The IPv6 interface has been set to manual because of problems with ifupdown2 and auto-IPv6 configurations
+iface {{ interface.name }} inet6 manual
